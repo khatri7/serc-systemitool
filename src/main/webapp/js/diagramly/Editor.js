@@ -2227,7 +2227,7 @@
 	/**
 	 * Specifies the app name. Default is document.title.
 	 */
-	Editor.prototype.appName = 'draw.io';
+	Editor.prototype.appName = 'SystemiTool';
 		
 	/**
 	 * Known file types.
