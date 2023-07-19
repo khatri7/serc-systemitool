@@ -9,9 +9,15 @@ RUN apt-get update -y && \
         git
 
 RUN cd /tmp && \
-    git clone --depth 1 https://github.com/jgraph/drawio.git && \
-    cd /tmp/drawio/etc/build/ && \
+    git clone --depth 1 https://github.com/khatri7/serc-systemitool.git && \
+    cd /tmp/serc-systemitool/etc/build/ && \
     ant war
+
+# Copy the Draw.io folder into the Docker image
+# COPY . /tmp/drawio
+
+# RUN cd /tmp/drawio/etc/build/ && \
+#     ant war
 
 FROM tomcat:9-jre11
 
@@ -30,7 +36,7 @@ RUN apt-get update -y && \
     apt-get clean && \
     rm -r /var/lib/apt/lists/*
 
-COPY --from=build /tmp/drawio/build/draw.war /tmp
+COPY --from=build /tmp/serc-systemitool/build/draw.war /tmp
 
 # Extract draw.io war & Update server.xml to set Draw.io webapp to root
 RUN mkdir -p $CATALINA_HOME/webapps/draw && \

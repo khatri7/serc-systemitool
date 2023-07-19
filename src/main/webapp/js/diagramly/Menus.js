@@ -1275,69 +1275,69 @@
 				{
 					var themeMenu = this.get('dynamicAppearance');
 					
-					if (themeMenu != null)
-					{
-						var elt = menubar.addMenu('', themeMenu.funct);
-						elt.setAttribute('title', mxResources.get('appearance'));
-						elt.className = 'geToolbarButton geAdaptiveAsset';
-						elt.style.backgroundPosition = 'center center';
-						elt.style.backgroundRepeat = 'no-repeat';
-						elt.style.backgroundSize = '100% 100%';
-						elt.style.display = 'inline-block';
-						elt.style.cursor = 'pointer';
-						elt.style.zIndex = '1';
+					// if (themeMenu != null)
+					// {
+					// 	var elt = menubar.addMenu('', themeMenu.funct);
+					// 	elt.setAttribute('title', mxResources.get('appearance'));
+					// 	elt.className = 'geToolbarButton geAdaptiveAsset';
+					// 	elt.style.backgroundPosition = 'center center';
+					// 	elt.style.backgroundRepeat = 'no-repeat';
+					// 	elt.style.backgroundSize = '100% 100%';
+					// 	elt.style.display = 'inline-block';
+					// 	elt.style.cursor = 'pointer';
+					// 	elt.style.zIndex = '1';
 
-						// Depends on theme
-						elt.style.position = 'absolute';
-						elt.style.height = '18px';
-						elt.style.width = '18px';
+					// 	// Depends on theme
+					// 	elt.style.position = 'absolute';
+					// 	elt.style.height = '18px';
+					// 	elt.style.width = '18px';
 
-						if (Editor.currentTheme == 'atlas')
-						{
-							elt.style.filter = 'invert(100%)';
-							elt.style.right = '11px';
-							elt.style.top = '10px';
-						}
-						else
-						{
-							elt.style.right = '10px';
-							elt.style.top = '5px';
-						}
+					// 	if (Editor.currentTheme == 'atlas')
+					// 	{
+					// 		elt.style.filter = 'invert(100%)';
+					// 		elt.style.right = '11px';
+					// 		elt.style.top = '10px';
+					// 	}
+					// 	else
+					// 	{
+					// 		elt.style.right = '10px';
+					// 		elt.style.top = '5px';
+					// 	}
 						
-						document.body.appendChild(elt);
-						menubar.langIcon = elt;
+					// 	document.body.appendChild(elt);
+					// 	menubar.langIcon = elt;
 
-						var updateThemeElement = mxUtils.bind(this, function()
-						{
-							var iw = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+					// 	var updateThemeElement = mxUtils.bind(this, function()
+					// 	{
+					// 		var iw = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
 							
-							elt.style.display = (Editor.currentTheme == 'atlas' || Editor.currentTheme == 'min' ||
-								Editor.currentTheme == 'sketch') ? 'none' : '';
+					// 		elt.style.display = (Editor.currentTheme == 'atlas' || Editor.currentTheme == 'min' ||
+					// 			Editor.currentTheme == 'sketch') ? 'none' : '';
 
-							if (Editor.currentTheme == 'simple')
-							{
-								if (iw < 750)
-								{
-									elt.style.backgroundImage = 'url(' + Editor.thinDoubleArrowRightImage + ')';
-								}
-								else
-								{
-									elt.style.backgroundImage = 'url(' + ((Editor.isDarkMode() || Editor.cssDarkMode) ?
-										Editor.thinDarkImage : Editor.thinLightImage) + ')';
-								}
-							}
-							else
-							{
-								elt.style.backgroundImage = 'url(' + ((Editor.isDarkMode()) ?
-									Editor.darkModeImage : Editor.lightModeImage) + ')';
-							}
-						});
+					// 		if (Editor.currentTheme == 'simple')
+					// 		{
+					// 			if (iw < 750)
+					// 			{
+					// 				elt.style.backgroundImage = 'url(' + Editor.thinDoubleArrowRightImage + ')';
+					// 			}
+					// 			else
+					// 			{
+					// 				elt.style.backgroundImage = 'url(' + ((Editor.isDarkMode() || Editor.cssDarkMode) ?
+					// 					Editor.thinDarkImage : Editor.thinLightImage) + ')';
+					// 			}
+					// 		}
+					// 		else
+					// 		{
+					// 			elt.style.backgroundImage = 'url(' + ((Editor.isDarkMode()) ?
+					// 				Editor.darkModeImage : Editor.lightModeImage) + ')';
+					// 		}
+					// 	});
 
-						this.editorUi.addListener('currentThemeChanged', updateThemeElement);
-						this.editorUi.addListener('darkModeChanged', updateThemeElement);
-						mxEvent.addListener(window, 'resize', updateThemeElement);
-						updateThemeElement();
-					}
+					// 	this.editorUi.addListener('currentThemeChanged', updateThemeElement);
+					// 	this.editorUi.addListener('darkModeChanged', updateThemeElement);
+					// 	mxEvent.addListener(window, 'resize', updateThemeElement);
+					// 	updateThemeElement();
+					// }
 				}
 
 				return menubar;
@@ -2763,27 +2763,30 @@
 		});
 
 		// Adds plugins menu item only if localStorage is available for storing the plugins
-		if (isLocalStorage || mxClient.IS_CHROMEAPP)
-		{
-			var action = editorUi.actions.addAction('scratchpad', function()
-			{
-				editorUi.toggleScratchpad();
-			});
+		// if (isLocalStorage || mxClient.IS_CHROMEAPP)
+		// {
+		// 	var action = editorUi.actions.addAction('scratchpad', function()
+		// 	{
+		// 		editorUi.toggleScratchpad();
+		// 	});
 			
-			action.setToggleAction(true);
-			action.setSelectedCallback(function()
-			{
-				return editorUi.scratchpad != null;
-			});
+		// 	action.setToggleAction(true);
+		// 	action.setSelectedCallback(function()
+		// 	{
+		// 		return editorUi.scratchpad != null;
+		// 	});
 			
-			if (urlParams['plugins'] != '0')
-			{
-				editorUi.actions.addAction('plugins...', function()
-				{
-					editorUi.showDialog(new PluginsDialog(editorUi).container, 380, 240, true, false);
-				});
-			}
-		}
+		// 	if (urlParams['plugins'] != '0')
+		// 	{
+		// 		editorUi.actions.addAction('plugins...', function()
+		// 		{
+		// 			editorUi.showDialog(new PluginsDialog(editorUi).container, 380, 240, true, false);
+		// 		});
+		// 	}
+		// }
+
+		// Modified the toggle function - will disable scratchpad if it is enabled else do nothing
+		editorUi.toggleScratchpad();
 		
 		var action = editorUi.actions.addAction('search', function()
 		{
