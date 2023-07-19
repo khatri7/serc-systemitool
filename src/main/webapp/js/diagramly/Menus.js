@@ -1275,69 +1275,69 @@
 				{
 					var themeMenu = this.get('dynamicAppearance');
 					
-					if (themeMenu != null)
-					{
-						var elt = menubar.addMenu('', themeMenu.funct);
-						elt.setAttribute('title', mxResources.get('appearance'));
-						elt.className = 'geToolbarButton geAdaptiveAsset';
-						elt.style.backgroundPosition = 'center center';
-						elt.style.backgroundRepeat = 'no-repeat';
-						elt.style.backgroundSize = '100% 100%';
-						elt.style.display = 'inline-block';
-						elt.style.cursor = 'pointer';
-						elt.style.zIndex = '1';
+					// if (themeMenu != null)
+					// {
+					// 	var elt = menubar.addMenu('', themeMenu.funct);
+					// 	elt.setAttribute('title', mxResources.get('appearance'));
+					// 	elt.className = 'geToolbarButton geAdaptiveAsset';
+					// 	elt.style.backgroundPosition = 'center center';
+					// 	elt.style.backgroundRepeat = 'no-repeat';
+					// 	elt.style.backgroundSize = '100% 100%';
+					// 	elt.style.display = 'inline-block';
+					// 	elt.style.cursor = 'pointer';
+					// 	elt.style.zIndex = '1';
 
-						// Depends on theme
-						elt.style.position = 'absolute';
-						elt.style.height = '18px';
-						elt.style.width = '18px';
+					// 	// Depends on theme
+					// 	elt.style.position = 'absolute';
+					// 	elt.style.height = '18px';
+					// 	elt.style.width = '18px';
 
-						if (Editor.currentTheme == 'atlas')
-						{
-							elt.style.filter = 'invert(100%)';
-							elt.style.right = '11px';
-							elt.style.top = '10px';
-						}
-						else
-						{
-							elt.style.right = '10px';
-							elt.style.top = '5px';
-						}
+					// 	if (Editor.currentTheme == 'atlas')
+					// 	{
+					// 		elt.style.filter = 'invert(100%)';
+					// 		elt.style.right = '11px';
+					// 		elt.style.top = '10px';
+					// 	}
+					// 	else
+					// 	{
+					// 		elt.style.right = '10px';
+					// 		elt.style.top = '5px';
+					// 	}
 						
-						document.body.appendChild(elt);
-						menubar.langIcon = elt;
+					// 	document.body.appendChild(elt);
+					// 	menubar.langIcon = elt;
 
-						var updateThemeElement = mxUtils.bind(this, function()
-						{
-							var iw = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+					// 	var updateThemeElement = mxUtils.bind(this, function()
+					// 	{
+					// 		var iw = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
 							
-							elt.style.display = (Editor.currentTheme == 'atlas' || Editor.currentTheme == 'min' ||
-								Editor.currentTheme == 'sketch') ? 'none' : '';
+					// 		elt.style.display = (Editor.currentTheme == 'atlas' || Editor.currentTheme == 'min' ||
+					// 			Editor.currentTheme == 'sketch') ? 'none' : '';
 
-							if (Editor.currentTheme == 'simple')
-							{
-								if (iw < 750)
-								{
-									elt.style.backgroundImage = 'url(' + Editor.thinDoubleArrowRightImage + ')';
-								}
-								else
-								{
-									elt.style.backgroundImage = 'url(' + ((Editor.isDarkMode() || Editor.cssDarkMode) ?
-										Editor.thinDarkImage : Editor.thinLightImage) + ')';
-								}
-							}
-							else
-							{
-								elt.style.backgroundImage = 'url(' + ((Editor.isDarkMode()) ?
-									Editor.darkModeImage : Editor.lightModeImage) + ')';
-							}
-						});
+					// 		if (Editor.currentTheme == 'simple')
+					// 		{
+					// 			if (iw < 750)
+					// 			{
+					// 				elt.style.backgroundImage = 'url(' + Editor.thinDoubleArrowRightImage + ')';
+					// 			}
+					// 			else
+					// 			{
+					// 				elt.style.backgroundImage = 'url(' + ((Editor.isDarkMode() || Editor.cssDarkMode) ?
+					// 					Editor.thinDarkImage : Editor.thinLightImage) + ')';
+					// 			}
+					// 		}
+					// 		else
+					// 		{
+					// 			elt.style.backgroundImage = 'url(' + ((Editor.isDarkMode()) ?
+					// 				Editor.darkModeImage : Editor.lightModeImage) + ')';
+					// 		}
+					// 	});
 
-						this.editorUi.addListener('currentThemeChanged', updateThemeElement);
-						this.editorUi.addListener('darkModeChanged', updateThemeElement);
-						mxEvent.addListener(window, 'resize', updateThemeElement);
-						updateThemeElement();
-					}
+					// 	this.editorUi.addListener('currentThemeChanged', updateThemeElement);
+					// 	this.editorUi.addListener('darkModeChanged', updateThemeElement);
+					// 	mxEvent.addListener(window, 'resize', updateThemeElement);
+					// 	updateThemeElement();
+					// }
 				}
 
 				return menubar;

@@ -13908,7 +13908,8 @@
 	 */
 	EditorUi.prototype.isAutoDarkModeSupported = function()
 	{
-		return window.matchMedia != null;
+		// return window.matchMedia != null;
+		return false;
 	};
 	
 	/**
