@@ -7064,13 +7064,13 @@ App.prototype.updateHeader = function()
 		
 		if (urlParams['embed'] != '1')
 		{
-			this.menubarContainer.appendChild(this.appIcon);
+			// this.menubarContainer.appendChild(this.appIcon);
 		}
 	
 		this.fnameWrapper = document.createElement('div');
 		this.fnameWrapper.style.position = 'absolute';
 		this.fnameWrapper.style.right = '120px';
-		this.fnameWrapper.style.left = '60px';
+		this.fnameWrapper.style.left = '1px';
 		this.fnameWrapper.style.top = '9px';
 		this.fnameWrapper.style.height = '26px';
 		this.fnameWrapper.style.display = 'none';
@@ -7116,7 +7116,7 @@ App.prototype.updateHeader = function()
 			this.menubarContainer.appendChild(this.fnameWrapper);
 		
 			this.menubar.container.style.position = 'absolute';
-			this.menubar.container.style.paddingLeft = '59px';
+			this.menubar.container.style.paddingLeft = '0px';
 			this.toolbar.container.style.paddingLeft = '16px';
 			this.menubar.container.style.boxSizing = 'border-box';
 			this.menubar.container.style.top = '34px';
