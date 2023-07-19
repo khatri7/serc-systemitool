@@ -2763,27 +2763,30 @@
 		});
 
 		// Adds plugins menu item only if localStorage is available for storing the plugins
-		if (isLocalStorage || mxClient.IS_CHROMEAPP)
-		{
-			var action = editorUi.actions.addAction('scratchpad', function()
-			{
-				editorUi.toggleScratchpad();
-			});
+		// if (isLocalStorage || mxClient.IS_CHROMEAPP)
+		// {
+		// 	var action = editorUi.actions.addAction('scratchpad', function()
+		// 	{
+		// 		editorUi.toggleScratchpad();
+		// 	});
 			
-			action.setToggleAction(true);
-			action.setSelectedCallback(function()
-			{
-				return editorUi.scratchpad != null;
-			});
+		// 	action.setToggleAction(true);
+		// 	action.setSelectedCallback(function()
+		// 	{
+		// 		return editorUi.scratchpad != null;
+		// 	});
 			
-			if (urlParams['plugins'] != '0')
-			{
-				editorUi.actions.addAction('plugins...', function()
-				{
-					editorUi.showDialog(new PluginsDialog(editorUi).container, 380, 240, true, false);
-				});
-			}
-		}
+		// 	if (urlParams['plugins'] != '0')
+		// 	{
+		// 		editorUi.actions.addAction('plugins...', function()
+		// 		{
+		// 			editorUi.showDialog(new PluginsDialog(editorUi).container, 380, 240, true, false);
+		// 		});
+		// 	}
+		// }
+
+		// Modified the toggle function - will disable scratchpad if it is enabled else do nothing
+		editorUi.toggleScratchpad();
 		
 		var action = editorUi.actions.addAction('search', function()
 		{

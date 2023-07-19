@@ -3225,15 +3225,15 @@
 		{
 			if (this.scratchpad == null)
 			{
-				StorageFile.getFileContent(this, '.scratchpad', mxUtils.bind(this, function(xml)
-				{
-					if (xml == null)
-					{
-						xml = this.emptyLibraryXml;
-					}
+				// StorageFile.getFileContent(this, '.scratchpad', mxUtils.bind(this, function(xml)
+				// {
+				// 	if (xml == null)
+				// 	{
+				// 		xml = this.emptyLibraryXml;
+				// 	}
 					
-					this.loadLibrary(new StorageLibrary(this, xml, '.scratchpad'));
-				}));
+				// 	this.loadLibrary(new StorageLibrary(this, xml, '.scratchpad'));
+				// }));
 			}
 			else
 			{
