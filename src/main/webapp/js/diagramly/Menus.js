@@ -930,25 +930,20 @@
 		action.setToggleAction(true);
 		action.setSelectedCallback(function() { return graph.shadowVisible; });
 
-		editorUi.actions.put('about', new Action(mxResources.get('about') + ' ' + EditorUi.VERSION + '...', function(arg1, evt)
+		var showingAbout = false;
+		
+		editorUi.actions.put('about', new Action(mxResources.get('aboutDrawio') + '...', function()
 		{
-			if (evt != null && mxEvent.isShiftDown(evt))
+			if (!showingAbout)
 			{
-				mxLog.show();
-
-				if (window.console != null)
+				editorUi.showDialog(new AboutDialog(editorUi).container, 220, 300, true, true, function()
 				{
-					console.log(editorUi, window);
-				}
+					showingAbout = false;
+				});
+				
+				showingAbout = true;
 			}
-			else if (editorUi.isOffline() || mxClient.IS_CHROMEAPP || EditorUi.isElectronApp)
-			{
-				editorUi.alert(editorUi.editor.appName + ' ' + EditorUi.VERSION);
-			}
-			else
-			{
-				editorUi.openLink('https://www.drawio.com/');
-			}
+			
 		}));
 		
 		editorUi.actions.addAction('support...', function()
@@ -1566,102 +1561,102 @@
 		
 		this.put('help', new Menu(mxUtils.bind(this, function(menu, parent)
 		{
-			if (!mxClient.IS_CHROMEAPP && editorUi.isOffline())
-			{
+			// if (!mxClient.IS_CHROMEAPP && editorUi.isOffline())
+			// {
 				this.addMenuItems(menu, ['about'], parent);
-			}
-			else
-			{
-				// No translation for menu item since help is english only
-				var item = menu.addItem('Search:', null, null, parent, null, null, false);
-				item.style.cursor = 'default';
+			// }
+			// else
+			// {
+			// 	// No translation for menu item since help is english only
+			// 	var item = menu.addItem('Search:', null, null, parent, null, null, false);
+			// 	item.style.cursor = 'default';
 				
-				var input = document.createElement('input');
-				input.setAttribute('type', 'text');
-				input.setAttribute('size', '25');
-				input.style.borderWidth = '1px';
-				input.style.marginLeft = '8px';
+			// 	var input = document.createElement('input');
+			// 	input.setAttribute('type', 'text');
+			// 	input.setAttribute('size', '25');
+			// 	input.style.borderWidth = '1px';
+			// 	input.style.marginLeft = '8px';
 
-				mxEvent.addListener(input, 'keydown', mxUtils.bind(this, function(e)
-				{
-					var term = mxUtils.trim(input.value);
+			// 	mxEvent.addListener(input, 'keydown', mxUtils.bind(this, function(e)
+			// 	{
+			// 		var term = mxUtils.trim(input.value);
 					
-					if (e.keyCode == 13 && term.length > 0)
-					{
-						this.editorUi.openLink('https://www.drawio.com/search?src=' +
-							(EditorUi.isElectronApp ? 'DESKTOP' : encodeURIComponent(location.host)) + 
-							'&search=' + encodeURIComponent(term));
-						input.value = '';
-						EditorUi.logEvent({category: 'SEARCH-HELP', action: 'search', label: term});
+			// 		if (e.keyCode == 13 && term.length > 0)
+			// 		{
+			// 			this.editorUi.openLink('https://www.drawio.com/search?src=' +
+			// 				(EditorUi.isElectronApp ? 'DESKTOP' : encodeURIComponent(location.host)) + 
+			// 				'&search=' + encodeURIComponent(term));
+			// 			input.value = '';
+			// 			EditorUi.logEvent({category: 'SEARCH-HELP', action: 'search', label: term});
 						
-						window.setTimeout(mxUtils.bind(this, function()
-						{
-							this.editorUi.hideCurrentMenu();
-						}), 0);
-					}
-	                else if (e.keyCode == 27)
-	                {
-	                    input.value = '';
-	                }
-				}));
+			// 			window.setTimeout(mxUtils.bind(this, function()
+			// 			{
+			// 				this.editorUi.hideCurrentMenu();
+			// 			}), 0);
+			// 		}
+	        //         else if (e.keyCode == 27)
+	        //         {
+	        //             input.value = '';
+	        //         }
+			// 	}));
 				
-				item.firstChild.nextSibling.appendChild(input);
+			// 	item.firstChild.nextSibling.appendChild(input);
 				
-				mxEvent.addGestureListeners(input, function(evt)
-				{
-					if (document.activeElement != input)
-					{
-						input.focus();
-					}
+			// 	mxEvent.addGestureListeners(input, function(evt)
+			// 	{
+			// 		if (document.activeElement != input)
+			// 		{
+			// 			input.focus();
+			// 		}
 					
-					mxEvent.consume(evt);
-				}, function(evt)
-				{
-					mxEvent.consume(evt);
-				}, function(evt)
-				{
-					mxEvent.consume(evt);
-				});
+			// 		mxEvent.consume(evt);
+			// 	}, function(evt)
+			// 	{
+			// 		mxEvent.consume(evt);
+			// 	}, function(evt)
+			// 	{
+			// 		mxEvent.consume(evt);
+			// 	});
 				
-				window.setTimeout(function()
-				{
-					input.focus();
-				}, 0);
+			// 	window.setTimeout(function()
+			// 	{
+			// 		input.focus();
+			// 	}, 0);
 
-				if (EditorUi.isElectronApp)
-				{
-					editorUi.actions.addAction('website...', function()
-					{
-						editorUi.openLink('https://www.drawio.com');
-					});
+			// 	if (EditorUi.isElectronApp)
+			// 	{
+			// 		editorUi.actions.addAction('website...', function()
+			// 		{
+			// 			editorUi.openLink('https://www.drawio.com');
+			// 		});
 					
-					editorUi.actions.addAction('check4Updates', function()
-					{
-						editorUi.checkForUpdates();
-					});
+			// 		editorUi.actions.addAction('check4Updates', function()
+			// 		{
+			// 			editorUi.checkForUpdates();
+			// 		});
 					
-					this.addMenuItems(menu, ['-', 'keyboardShortcuts', 'quickStart',
-						'website', 'support', '-'], parent);
+			// 		this.addMenuItems(menu, ['-', 'keyboardShortcuts', 'quickStart',
+			// 			'website', 'support', '-'], parent);
 
-					if (urlParams['disableUpdate'] != '1')
-					{
-						this.addMenuItems(menu, ['check4Updates'], parent);
-					}
+			// 		if (urlParams['disableUpdate'] != '1')
+			// 		{
+			// 			this.addMenuItems(menu, ['check4Updates'], parent);
+			// 		}
 
-					this.addMenuItems(menu, ['openDevTools', '-', 'about'], parent);
-				}
-				else
-				{
-					this.addMenuItems(menu, ['-', 'keyboardShortcuts',
-						'quickStart', 'support', '-', 'about'], parent);
-				}
-			}
+			// 		this.addMenuItems(menu, ['openDevTools', '-', 'about'], parent);
+			// 	}
+			// 	else
+			// 	{
+			// 		this.addMenuItems(menu, ['-', 'keyboardShortcuts',
+			// 			'quickStart', 'support', '-', 'about'], parent);
+			// 	}
+			// }
 			
-			if (urlParams['test'] == '1')
-			{
-				menu.addSeparator(parent);
-				this.addSubmenu('testDevelop', menu, parent);
-			}
+			// if (urlParams['test'] == '1')
+			// {
+			// 	menu.addSeparator(parent);
+			// 	this.addSubmenu('testDevelop', menu, parent);
+			// }
 		})));
 		
 		editorUi.actions.addAction('languageCode...', function()

@@ -6487,6 +6487,69 @@ var LinkDialog = function(editorUi, initialValue, btnLabel, fn, showPages, showN
 /**
  * Constructs a new about dialog
  */
+var AboutDialog = function(editorUi)
+{
+	var div = document.createElement('div');
+	div.style.marginTop = '6px';
+	div.setAttribute('align', 'center');
+	
+	var img = document.createElement('img');
+	img.style.border = '0px';
+	
+	if (mxClient.IS_SVG)
+	{
+		img.setAttribute('width', '164');
+		img.setAttribute('height', '164');
+		img.style.width = '164px';
+		img.style.height = '164px';
+		img.setAttribute('src', IMAGE_PATH + '/Systemitool.png');
+	}
+	else
+	{
+		img.setAttribute('width', '176');
+		img.setAttribute('height', '176');
+		img.style.width = '170px';
+		img.style.height = '170px';
+		img.setAttribute('src', IMAGE_PATH + '/Systemitool.png');
+	}
+
+	div.appendChild(img);
+	mxUtils.br(div);
+	
+	/* var v = document.createElement('small');
+	v.innerHTML = 'v ' + EditorUi.VERSION;
+	v.style.color = '#505050';
+	div.appendChild(v); */
+	
+	mxUtils.br(div);
+	mxUtils.br(div);
+
+	var small = document.createElement('small');
+	small.style.color = '#505050';
+	small.innerHTML = '<a href="https://systemitool.sercuarc.org/" style="color:inherit;" target="_blank">SystemiTool 2.1</a>.<br>@SERC All Rights Reserved.';
+	div.appendChild(small);
+
+	mxEvent.addListener(div, 'click', function(e)
+	{
+		if (mxEvent.getSource(e).nodeName != 'A')
+		{
+			editorUi.hideDialog();
+		}
+	});
+	
+    small = document.createElement('small');
+	small.style.color = '#a4a4a4';
+	small.style.fontSize='9px';
+	small.innerHTML = '<br><br><br><br><br>Library mxGraph under Apache Licence 2.0';
+	div.appendChild(small);
+
+
+	this.container = div;
+};
+
+/**
+ * Constructs a new about dialog
+ */
 var FeedbackDialog = function(editorUi, subject, emailOptional, diagramData)
 {
 	var div = document.createElement('div');
