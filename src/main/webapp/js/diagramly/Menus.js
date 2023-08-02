@@ -4624,192 +4624,193 @@
 
 		this.put('extras', new Menu(mxUtils.bind(this, function(menu, parent)
 		{
-			// Compatiblity code for live UI switch and static UI
-			var sketchTheme = Editor.currentTheme == 'simple' || urlParams['sketch'] == '1';
+			this.addMenuItem(menu, "plugins", parent);
+			// // Compatiblity code for live UI switch and static UI
+			// var sketchTheme = Editor.currentTheme == 'simple' || urlParams['sketch'] == '1';
 			
-			if (sketchTheme || uiTheme == 'min')
-			{
-				if ((urlParams['embed'] != '1' || urlParams['atlas'] == '1') &&
-					urlParams['extAuth'] != '1' && editorUi.mode != App.MODE_ATLAS &&
-					urlParams['embedInline'] != '1' && (Editor.isDarkMode() ||
-					(!mxClient.IS_IE && !mxClient.IS_IE11)))
-				{
-					editorUi.menus.addSubmenu('appearance', menu, parent);
-				}
+			// if (sketchTheme || uiTheme == 'min')
+			// {
+			// 	if ((urlParams['embed'] != '1' || urlParams['atlas'] == '1') &&
+			// 		urlParams['extAuth'] != '1' && editorUi.mode != App.MODE_ATLAS &&
+			// 		urlParams['embedInline'] != '1' && (Editor.isDarkMode() ||
+			// 		(!mxClient.IS_IE && !mxClient.IS_IE11)))
+			// 	{
+			// 		editorUi.menus.addSubmenu('appearance', menu, parent);
+			// 	}
 
-				if (urlParams['embed'] != '1' && urlParams['extAuth'] != '1' &&
-					editorUi.mode != App.MODE_ATLAS)
-				{
-					editorUi.menus.addSubmenu('theme', menu, parent);
-				}
+			// 	if (urlParams['embed'] != '1' && urlParams['extAuth'] != '1' &&
+			// 		editorUi.mode != App.MODE_ATLAS)
+			// 	{
+			// 		editorUi.menus.addSubmenu('theme', menu, parent);
+			// 	}
 				
-				menu.addSeparator(parent);
+			// 	menu.addSeparator(parent);
 
-				if (langMenu != null && (urlParams['embed'] != '1' || urlParams['lang'] == null))
-				{
-					editorUi.menus.addSubmenu('language', menu, parent);
-				}
+			// 	if (langMenu != null && (urlParams['embed'] != '1' || urlParams['lang'] == null))
+			// 	{
+			// 		editorUi.menus.addSubmenu('language', menu, parent);
+			// 	}
 				
-				editorUi.menus.addSubmenu('units', menu, parent);
-				editorUi.menus.addMenuItems(menu, ['-', 'copyConnect',
-					'collapseExpand', 'tooltips', '-'], parent);
+			// 	editorUi.menus.addSubmenu('units', menu, parent);
+			// 	editorUi.menus.addMenuItems(menu, ['-', 'copyConnect',
+			// 		'collapseExpand', 'tooltips', '-'], parent);
 
-				var file = editorUi.getCurrentFile();
+			// 	var file = editorUi.getCurrentFile();
 
-				if (Editor.currentTheme != 'simple')
-				{
-					if (file != null && file.isRealtimeEnabled() && file.isRealtimeSupported())
-					{
-						this.addMenuItems(menu, ['showRemoteCursors'], parent);
-					}
+			// 	if (Editor.currentTheme != 'simple')
+			// 	{
+			// 		if (file != null && file.isRealtimeEnabled() && file.isRealtimeSupported())
+			// 		{
+			// 			this.addMenuItems(menu, ['showRemoteCursors'], parent);
+			// 		}
 					
-					editorUi.menus.addMenuItems(menu, ['ruler', '-'], parent);
-				}
+			// 		editorUi.menus.addMenuItems(menu, ['ruler', '-'], parent);
+			// 	}
 
-				if (EditorUi.isElectronApp)
-				{
-					editorUi.menus.addMenuItems(menu, ['-', 'spellCheck', 'autoBkp', 'drafts', '-'], parent);
-				}
+			// 	if (EditorUi.isElectronApp)
+			// 	{
+			// 		editorUi.menus.addMenuItems(menu, ['-', 'spellCheck', 'autoBkp', 'drafts', '-'], parent);
+			// 	}
 
-				this.addSubmenu('diagramLanguage', menu, parent);
-				menu.addSeparator(parent);
+			// 	this.addSubmenu('diagramLanguage', menu, parent);
+			// 	menu.addSeparator(parent);
 				
-				if (editorUi.mode != App.MODE_ATLAS) 
-				{
-					editorUi.menus.addMenuItem(menu, 'configuration', parent);
-				}
+			// 	if (editorUi.mode != App.MODE_ATLAS) 
+			// 	{
+			// 		editorUi.menus.addMenuItem(menu, 'configuration', parent);
+			// 	}
 				
-				// Adds trailing separator in case new plugin entries are added
-				menu.addSeparator(parent);
-			}
-			else
-			{
-				if (urlParams['embed'] != '1' || urlParams['lang'] == null)
-				{
-					this.addSubmenu('language', menu, parent);
-				}
+			// 	// Adds trailing separator in case new plugin entries are added
+			// 	menu.addSeparator(parent);
+			// }
+			// else
+			// {
+			// 	if (urlParams['embed'] != '1' || urlParams['lang'] == null)
+			// 	{
+			// 		this.addSubmenu('language', menu, parent);
+			// 	}
 				
-				if ((urlParams['embed'] != '1' || urlParams['atlas'] == '1') &&
-					Editor.currentTheme != 'atlas' && (Editor.isDarkMode() ||
-					(!mxClient.IS_IE && !mxClient.IS_IE11)))
-				{
-					editorUi.menus.addSubmenu('appearance', menu, parent);
-				}
+			// 	if ((urlParams['embed'] != '1' || urlParams['atlas'] == '1') &&
+			// 		Editor.currentTheme != 'atlas' && (Editor.isDarkMode() ||
+			// 		(!mxClient.IS_IE && !mxClient.IS_IE11)))
+			// 	{
+			// 		editorUi.menus.addSubmenu('appearance', menu, parent);
+			// 	}
 
-				if (urlParams['embed'] != '1' && urlParams['extAuth'] != '1' &&
-					editorUi.mode != App.MODE_ATLAS)
-				{
-					this.addSubmenu('theme', menu, parent);
-				}
+			// 	if (urlParams['embed'] != '1' && urlParams['extAuth'] != '1' &&
+			// 		editorUi.mode != App.MODE_ATLAS)
+			// 	{
+			// 		this.addSubmenu('theme', menu, parent);
+			// 	}
 
-				menu.addSeparator(parent);
+			// 	menu.addSeparator(parent);
 
-				if (typeof(MathJax) !== 'undefined')
-				{
-					var item = this.addMenuItem(menu, 'mathematicalTypesetting', parent);
+			// 	if (typeof(MathJax) !== 'undefined')
+			// 	{
+			// 		var item = this.addMenuItem(menu, 'mathematicalTypesetting', parent);
 					
-					if (!editorUi.isOffline() || mxClient.IS_CHROMEAPP || EditorUi.isElectronApp)
-					{
-						this.addLinkToItem(item, 'https://www.drawio.com/doc/faq/math-typesetting');
-					}
-				}
+			// 		if (!editorUi.isOffline() || mxClient.IS_CHROMEAPP || EditorUi.isElectronApp)
+			// 		{
+			// 			this.addLinkToItem(item, 'https://www.drawio.com/doc/faq/math-typesetting');
+			// 		}
+			// 	}
 				
-				if (EditorUi.isElectronApp)
-				{
-					this.addMenuItems(menu, ['spellCheck', 'autoBkp', 'drafts', '-'], parent);
-				}
+			// 	if (EditorUi.isElectronApp)
+			// 	{
+			// 		this.addMenuItems(menu, ['spellCheck', 'autoBkp', 'drafts', '-'], parent);
+			// 	}
 
-				this.addMenuItems(menu, ['copyConnect', 'collapseExpand', '-'], parent);
+			// 	this.addMenuItems(menu, ['copyConnect', 'collapseExpand', '-'], parent);
 				
-				if (urlParams['embed'] != '1')
-				{
-					var file = editorUi.getCurrentFile();
+			// 	if (urlParams['embed'] != '1')
+			// 	{
+			// 		var file = editorUi.getCurrentFile();
 
-					if (file != null && file.isRealtimeEnabled() && file.isRealtimeSupported())
-					{
-						this.addMenuItems(menu, ['showRemoteCursors', 'shareCursor'], parent);
-					}
+			// 		if (file != null && file.isRealtimeEnabled() && file.isRealtimeSupported())
+			// 		{
+			// 			this.addMenuItems(menu, ['showRemoteCursors', 'shareCursor'], parent);
+			// 		}
 
-					this.addMenuItems(menu, ['autosave'], parent);
-				}
+			// 		this.addMenuItems(menu, ['autosave'], parent);
+			// 	}
 
-				menu.addSeparator(parent);
+			// 	menu.addSeparator(parent);
 				
-				if (!editorUi.isOfflineApp() && isLocalStorage)
-				{
-					this.addMenuItem(menu, 'plugins', parent);
-				}
+			// 	if (!editorUi.isOfflineApp() && isLocalStorage)
+			// 	{
+			// 		this.addMenuItem(menu, 'plugins', parent);
+			// 	}
 
-				this.addMenuItems(menu, ['-', 'editDiagram'], parent);
-				this.addSubmenu('diagramLanguage', menu, parent);
-				menu.addSeparator(parent);
+			// 	this.addMenuItems(menu, ['-', 'editDiagram'], parent);
+			// 	this.addSubmenu('diagramLanguage', menu, parent);
+			// 	menu.addSeparator(parent);
 
-				if (urlParams['embed'] != '1' && (isLocalStorage || mxClient.IS_CHROMEAPP))
-				{
-					this.addMenuItems(menu, ['showStartScreen'], parent);
-				}
+			// 	if (urlParams['embed'] != '1' && (isLocalStorage || mxClient.IS_CHROMEAPP))
+			// 	{
+			// 		this.addMenuItems(menu, ['showStartScreen'], parent);
+			// 	}
 
-				this.addMenuItems(menu, ['configuration'], parent);
+			// 	this.addMenuItems(menu, ['configuration'], parent);
 				
-				// Adds trailing separator in case new plugin entries are added
-				menu.addSeparator(parent);
+			// 	// Adds trailing separator in case new plugin entries are added
+			// 	menu.addSeparator(parent);
 				
-				if (urlParams['newTempDlg'] == '1')
-				{
-					editorUi.actions.addAction('templates', function()
-					{
-						function driveObjToTempDlg(item)
-						{
-							return {id: item.id, isExt: true, url: item.downloadUrl, title: item.title, imgUrl: item.thumbnailLink,
-									changedBy: item.lastModifyingUserName, lastModifiedOn: item.modifiedDate}
-						};
+			// 	if (urlParams['newTempDlg'] == '1')
+			// 	{
+			// 		editorUi.actions.addAction('templates', function()
+			// 		{
+			// 			function driveObjToTempDlg(item)
+			// 			{
+			// 				return {id: item.id, isExt: true, url: item.downloadUrl, title: item.title, imgUrl: item.thumbnailLink,
+			// 						changedBy: item.lastModifyingUserName, lastModifiedOn: item.modifiedDate}
+			// 			};
 						
-						var tempDlg = new TemplatesDialog(editorUi, function(xml){console.log(arguments)}, null,
-								null, null, 'user', function(callback, error, username)
-						{
-							var oneWeek = new Date();
-							oneWeek.setDate(oneWeek.getDate() - 7);
+			// 			var tempDlg = new TemplatesDialog(editorUi, function(xml){console.log(arguments)}, null,
+			// 					null, null, 'user', function(callback, error, username)
+			// 			{
+			// 				var oneWeek = new Date();
+			// 				oneWeek.setDate(oneWeek.getDate() - 7);
 							
-							editorUi.drive.listFiles(null, oneWeek, username? true : false, function(resp)
-							{
-								var results = [];
+			// 				editorUi.drive.listFiles(null, oneWeek, username? true : false, function(resp)
+			// 				{
+			// 					var results = [];
 								
-								for (var i = 0; i < resp.items.length; i++)
-								{
-									results.push(driveObjToTempDlg(resp.items[i]));
-								}
+			// 					for (var i = 0; i < resp.items.length; i++)
+			// 					{
+			// 						results.push(driveObjToTempDlg(resp.items[i]));
+			// 					}
 								
-								callback(results);
-							}, error)
-						}, function(str, callback, error, username)
-						{
-							editorUi.drive.listFiles(str, null, username? true : false, function(resp)
-							{
-								var results = [];
+			// 					callback(results);
+			// 				}, error)
+			// 			}, function(str, callback, error, username)
+			// 			{
+			// 				editorUi.drive.listFiles(str, null, username? true : false, function(resp)
+			// 				{
+			// 					var results = [];
 								
-								for (var i = 0; i < resp.items.length; i++)
-								{
-									results.push(driveObjToTempDlg(resp.items[i]));
-								}
+			// 					for (var i = 0; i < resp.items.length; i++)
+			// 					{
+			// 						results.push(driveObjToTempDlg(resp.items[i]));
+			// 					}
 								
-								callback(results);
-							}, error)
-						}, function(obj, callback, error)
-						{
-							editorUi.drive.getFile(obj.id, function(file)
-							{
-								callback(file.data);
-							}, error);
-						}, null, function(callback)
-						{
-							callback({'Test': []}, 1);
-						}, true, false);
+			// 					callback(results);
+			// 				}, error)
+			// 			}, function(obj, callback, error)
+			// 			{
+			// 				editorUi.drive.getFile(obj.id, function(file)
+			// 				{
+			// 					callback(file.data);
+			// 				}, error);
+			// 			}, null, function(callback)
+			// 			{
+			// 				callback({'Test': []}, 1);
+			// 			}, true, false);
 						
-						editorUi.showDialog(tempDlg.container, window.innerWidth, window.innerHeight, true, false, null, false, true);
-					});
-					this.addMenuItem(menu, 'templates', parent);
-				}
-			}
+			// 			editorUi.showDialog(tempDlg.container, window.innerWidth, window.innerHeight, true, false, null, false, true);
+			// 		});
+			// 		this.addMenuItem(menu, 'templates', parent);
+			// 	}
+			// }
 		})));
 
 		this.put('movePage', new Menu(mxUtils.bind(this, function(menu, parent)

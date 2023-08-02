@@ -1881,6 +1881,37 @@ Actions.prototype.init = function()
 			dlg.init();
 		}
 	}, null, null, 'Alt+Shift+Q').isEnabled = isGraphEnabled;
+
+	action = this.addAction('plugins', mxUtils.bind(this, function()
+	{
+		if (this.animationWindow == null)
+		{
+			// LATER: Check outline window for initial placement
+			this.animationWindow = new AnimationWindow(ui, (document.body.offsetWidth - 480) / 2, 120, 640, 480);
+			this.animationWindow.window.setVisible(true);
+            this.animationWindow.window.setScrollable(true);
+            //this.animationWindow.window.setResizable(false);
+            var mql = window.matchMedia("(max-width: 700px)");
+
+            mql.addListener(function(e) {
+				if(e.matches){
+					console.log('enter mobile');
+					//this.animationWindow.window.setSize(450,250);
+				}
+				else{
+					console.log('leave mobile');
+					//this.animationWindow.window.setSize(640,480);
+				}
+			});        
+		}
+		else
+		{
+			this.animationWindow.window.setVisible(!this.animationWindow.window.isVisible());
+		}
+	}), null, null, Editor.ctrlKey + '+Shift+^');
+        
+    action.setToggleAction(true);
+	action.setSelectedCallback(mxUtils.bind(this, function() { return this.animationWindow != null && this.animationWindow.window.isVisible(); }));
 };
 
 /**
