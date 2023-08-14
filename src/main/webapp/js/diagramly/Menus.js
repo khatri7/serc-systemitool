@@ -3817,28 +3817,30 @@
 			}
 			else
 			{
-				this.addMenuItems(menu, ['insertRectangle', 'insertEllipse', 'insertRhombus',
-					'-', 'insertEdge', 'insertNote', '-', 'insertText', 'insertLink',
-					'-', 'createShape', 'insertFreehand', '-', 'insertImage'], parent);
+				// this.addMenuItems(menu, ['insertRectangle', 'insertEllipse', 'insertRhombus',
+				// 	'-', 'insertEdge', 'insertNote', '-', 'insertText', 'insertLink',
+				// 	'-', 'createShape', 'insertFreehand', '-', 'insertImage'], parent);
 
-				if (editorUi.insertTemplateEnabled && !editorUi.isOffline())
-				{
-					this.addMenuItems(menu, ['insertTemplate'], parent);
-				}
+				this.addMenuItems(menu, ['insertImage'], parent);
+
+				// if (editorUi.insertTemplateEnabled && !editorUi.isOffline())
+				// {
+				// 	this.addMenuItems(menu, ['insertTemplate'], parent);
+				// }
 				
-				menu.addSeparator(parent);
+				// menu.addSeparator(parent);
 
-				if (uiTheme == 'min' || Editor.currentTheme == 'simple')
-				{
-					this.addSubmenu('table', menu, parent);
-					this.addSubmenu('layout', menu, parent);
-				}
-				else
-				{
-					this.addSubmenu('insertLayout', menu, parent, mxResources.get('layout'));
-				}
+				// if (uiTheme == 'min' || Editor.currentTheme == 'simple')
+				// {
+				// 	this.addSubmenu('table', menu, parent);
+				// 	this.addSubmenu('layout', menu, parent);
+				// }
+				// else
+				// {
+				// 	this.addSubmenu('insertLayout', menu, parent, mxResources.get('layout'));
+				// }
 
-				this.addSubmenu('insertAdvanced', menu, parent, mxResources.get('advanced'));
+				// this.addSubmenu('insertAdvanced', menu, parent, mxResources.get('advanced'));
 			}
 		})));
 
@@ -4308,10 +4310,13 @@
 		// Overrides edit menu to add find, copyAsImage editGeometry
 		this.put('edit', new Menu(mxUtils.bind(this, function(menu, parent)
 		{
-			this.addMenuItems(menu, ['undo', 'redo', '-', 'cut', 'copy', 'copyAsImage', 'paste',
-				'delete', '-', 'duplicate', '-', 'findReplace', '-', 'editData', 'editTooltip', '-',
-				'editStyle',  'editGeometry', '-', 'edit', '-', 'editLink', 'openLink', '-',
-                'selectVertices', 'selectEdges', 'selectAll', 'selectNone', '-', 'lockUnlock']);
+			// this.addMenuItems(menu, ['undo', 'redo', '-', 'cut', 'copy', 'copyAsImage', 'paste',
+			// 	'delete', '-', 'duplicate', '-', 'findReplace', '-', 'editData', 'editTooltip', '-',
+			// 	'editStyle',  'editGeometry', '-', 'edit', '-', 'editLink', 'openLink', '-',
+            //     'selectVertices', 'selectEdges', 'selectAll', 'selectNone', '-', 'lockUnlock']);
+			this.addMenuItems(menu, ['undo', 'redo', '-', 'cut', 'copy', 'paste',
+				'delete', '-', 'duplicate', '-', 'selectVertices', 'selectEdges', 'selectAll', 
+				'selectNone', '-', 'lockUnlock']);
 		})));
 
 		var action = editorUi.actions.addAction('comments', mxUtils.bind(this, function()
@@ -4422,24 +4427,27 @@
 			}
 			else
 			{
-				this.addMenuItems(menu, (['format', 'outline', 'layers', 'tags']).
-					concat((editorUi.commentsSupported()) ?
-					['comments', '-'] : ['-']));
+				// this.addMenuItems(menu, (['format', 'outline', 'layers', 'tags']).
+				// 	concat((editorUi.commentsSupported()) ?
+				// 	['comments', '-'] : ['-']));
+
+				this.addMenuItems(menu, (['format', 'outline', 'layers']));
 				
-				this.addMenuItems(menu, ['-', 'search'], parent);
+				// this.addMenuItems(menu, ['-', 'search'], parent);
 				
-				if (isLocalStorage || mxClient.IS_CHROMEAPP)
-				{
-					var item = this.addMenuItem(menu, 'scratchpad', parent);
+				// if (isLocalStorage || mxClient.IS_CHROMEAPP)
+				// {
+				// 	var item = this.addMenuItem(menu, 'scratchpad', parent);
 					
-					if (!editorUi.isOffline() || mxClient.IS_CHROMEAPP || EditorUi.isElectronApp)
-					{
-						this.addLinkToItem(item, 'https://www.drawio.com/doc/faq/scratchpad');
-					}
-				}
+				// 	if (!editorUi.isOffline() || mxClient.IS_CHROMEAPP || EditorUi.isElectronApp)
+				// 	{
+				// 		this.addLinkToItem(item, 'https://www.drawio.com/doc/faq/scratchpad');
+				// 	}
+				// }
 				
-				this.addMenuItems(menu, ['toggleShapes', '-', 'pageView', 'pageScale']);
-				this.addSubmenu('units', menu, parent);
+				// this.addMenuItems(menu, ['toggleShapes', '-', 'pageView', 'pageScale']);
+				this.addMenuItems(menu, [, '-', 'pageView', 'pageScale']);
+				// this.addSubmenu('units', menu, parent);
 				menu.addSeparator(parent);
 
 				if (editorUi.isPageMenuVisible())
@@ -4447,14 +4455,16 @@
 					editorUi.menus.addMenuItems(menu, ['pageTabs'], parent);
 				}
 
+				// this.addMenuItems(menu, ['tooltips', 'ruler', '-', 'grid', 'guides',
+				// 	'-', 'connectionArrows', 'connectionPoints', '-',
+				// 	'resetView', 'zoomIn', 'zoomOut'], parent);
 				this.addMenuItems(menu, ['tooltips', 'ruler', '-', 'grid', 'guides',
-					'-', 'connectionArrows', 'connectionPoints', '-',
-					'resetView', 'zoomIn', 'zoomOut'], parent);
+					'-', 'resetView', 'zoomIn', 'zoomOut'], parent);
 
-				if (urlParams['sketch'] != '1')
-				{
-					this.addMenuItems(menu, ['-', 'fullscreen'], parent);
-				}
+				// if (urlParams['sketch'] != '1')
+				// {
+				// 	this.addMenuItems(menu, ['-', 'fullscreen'], parent);
+				// }
 			}
 		})));
 
@@ -5266,10 +5276,10 @@
 						menu.addSeparator(parent);
 						var item = this.addMenuItem(menu, 'synchronize', parent);
 						
-						if (!editorUi.isOffline() || mxClient.IS_CHROMEAPP || EditorUi.isElectronApp)
-						{
-							this.addLinkToItem(item, 'https://www.drawio.com/doc/faq/synchronize');
-						}
+						// if (!editorUi.isOffline() || mxClient.IS_CHROMEAPP || EditorUi.isElectronApp)
+						// {
+						// 	this.addLinkToItem(item, 'https://www.drawio.com/doc/faq/synchronize');
+						// }
 					}
 					
 					this.addMenuItems(menu, ['-', 'save', 'saveAs', '-'], parent);
@@ -5286,58 +5296,58 @@
 						this.addMenuItems(menu, ['rename'], parent);
 					}
 					
-					if (editorUi.isOfflineApp())
-					{
-						if (navigator.onLine && urlParams['stealth'] != '1' && urlParams['lockdown'] != '1')
-						{
-							this.addMenuItems(menu, ['upload'], parent);
-						}
-					}
-					else
-					{
-						this.addMenuItems(menu, ['makeCopy'], parent);
+					// if (editorUi.isOfflineApp())
+					// {
+					// 	if (navigator.onLine && urlParams['stealth'] != '1' && urlParams['lockdown'] != '1')
+					// 	{
+					// 		this.addMenuItems(menu, ['upload'], parent);
+					// 	}
+					// }
+					// else
+					// {
+					// 	this.addMenuItems(menu, ['makeCopy'], parent);
 
-						if (file != null)
-						{
-							if (file.constructor == OneDriveFile)
-							{
-								this.addMenuItems(menu, ['moveToFolder'], parent);
-							}
+					// 	if (file != null)
+					// 	{
+					// 		if (file.constructor == OneDriveFile)
+					// 		{
+					// 			this.addMenuItems(menu, ['moveToFolder'], parent);
+					// 		}
 
-							if (file.getFolderUrl() != null)
-							{
-								editorUi.menus.addMenuItems(menu, ['openFolder'], parent);
-							}
-						}
-					}
+					// 		if (file.getFolderUrl() != null)
+					// 		{
+					// 			editorUi.menus.addMenuItems(menu, ['openFolder'], parent);
+					// 		}
+					// 	}
+					// }
 				}
 				
 				menu.addSeparator(parent);
 				this.addSubmenu('importFrom', menu, parent);
 				this.addSubmenu('exportAs', menu, parent);
-				menu.addSeparator(parent);
-				this.addSubmenu('embed', menu, parent);
-				this.addSubmenu('publish', menu, parent);
+				// menu.addSeparator(parent);
+				// this.addSubmenu('embed', menu, parent);
+				// this.addSubmenu('publish', menu, parent);
 				menu.addSeparator(parent);
 				this.addSubmenu('newLibrary', menu, parent);
 				this.addSubmenu('openLibraryFrom', menu, parent);
 				
-				if (editorUi.isRevisionHistorySupported())
-				{
-					this.addMenuItems(menu, ['-', 'revisionHistory'], parent);
-				}
+				// if (editorUi.isRevisionHistorySupported())
+				// {
+				// 	this.addMenuItems(menu, ['-', 'revisionHistory'], parent);
+				// }
 				
-				if (file != null && editorUi.fileNode != null && urlParams['embedInline'] != '1')
-				{
-					var filename = (file.getTitle() != null) ?
-						file.getTitle() : editorUi.defaultFilename;
+				// if (file != null && editorUi.fileNode != null && urlParams['embedInline'] != '1')
+				// {
+				// 	var filename = (file.getTitle() != null) ?
+				// 		file.getTitle() : editorUi.defaultFilename;
 					
-					if ((file.constructor == DriveFile && file.sync != null &&
-						file.sync.isConnected()) || !/(\.html)$/i.test(filename))
-					{
-						this.addMenuItems(menu, ['-', 'properties']);
-					}
-				}
+				// 	if ((file.constructor == DriveFile && file.sync != null &&
+				// 		file.sync.isConnected()) || !/(\.html)$/i.test(filename))
+				// 	{
+				// 		this.addMenuItems(menu, ['-', 'properties']);
+				// 	}
+				// }
 				
 				this.addMenuItems(menu, ['-', 'pageSetup'], parent);
 				
