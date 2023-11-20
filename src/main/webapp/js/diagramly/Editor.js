@@ -2233,15 +2233,16 @@
 	 * Known file types.
 	 */
 	Editor.prototype.diagramFileTypes = [
-		{description: 'diagramXmlDesc', extension: 'drawio', mimeType: 'text/xml'},
+		// {description: 'diagramXmlDesc', extension: 'drawio', mimeType: 'text/xml'},
+		{description: 'diagramXmlDesc', extension: 'xml', mimeType: 'text/xml'},
 		{description: 'diagramPngDesc', extension: 'png', mimeType: 'image/png'},
 		{description: 'diagramSvgDesc', extension: 'svg', mimeType: 'image/svg'},
 		{description: 'diagramHtmlDesc', extension: 'html', mimeType: 'text/html'}];
 	
-	if (urlParams['save-dialog'] != '1')
-	{
-		Editor.prototype.diagramFileTypes.push({description: 'diagramXmlDesc', extension: 'xml', mimeType: 'text/xml'});
-	}
+	// if (urlParams['save-dialog'] != '1')
+	// {
+	// 	Editor.prototype.diagramFileTypes.push({description: 'diagramXmlDesc', extension: 'xml', mimeType: 'text/xml'});
+	// }
 
 	/**
 	 * Known file types.
