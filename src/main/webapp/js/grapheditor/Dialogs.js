@@ -2741,3 +2741,2636 @@ var LayersWindow = function(editorUi, x, y, w, h)
 	this.refreshLayers = refresh;
 	editorUi.installResizeHandler(this, true);
 };
+
+var global_step =0;
+
+var AnimationWindow = function(editorUi, x, y, w, h){
+               
+        var table = document.createElement('table');
+        table.style.width = '100%';
+        table.style.height = '100%';
+        var tbody = document.createElement('tbody');
+        var tr1 = document.createElement('tr');
+        //tr1.setAttribute('min-height','20px');
+        var td11 = document.createElement('td');
+        td11.style.width = '140px';
+        var td12 = document.createElement('td');
+        var tr2 = document.createElement('tr');
+        tr2.style.height = '40px';
+
+        var td21 = document.createElement('td');
+        td21.setAttribute('colspan', '2');
+
+        var tr3 = document.createElement('tr');
+        tr3.style.height = '30px';
+        var td31 = document.createElement('td');
+        td31.setAttribute('colspan', '2');
+
+        var list = document.createElement('textarea');
+        list.style.overflow = 'auto';
+        list.style.width = '100%';
+        list.style.height = '100%';
+        //td11.appendChild(list);
+
+        var root = editorUi.editor.graph.getModel().getRoot();
+        console.log("Root:" ,root);
+        var stepContInnerHtml ="";
+        if (root.value != null && typeof(root.value) == 'object')
+        {
+                stepContInnerHtml=root.value.getAttribute('steps');
+                list.value = root.value.getAttribute('animation');
+        }
+        // code for ui changes starts
+        var parentcontainer = document.createElement('div');
+        parentcontainer.style.border = '1px solid lightGray';
+        parentcontainer.style.background = '#ffffff';
+        parentcontainer.style.width = '100%';
+        parentcontainer.style.height = '100%';
+        parentcontainer.style.overflow = 'auto';
+
+        var stepscontainer = document.createElement('div');
+        stepscontainer.id= "stepscontainerdiv";
+        stepscontainer.style.border = '1px solid lightGray';
+        stepscontainer.style.background = '#ffffff';
+        stepscontainer.style.width = '110px';
+        stepscontainer.style.height = '330px';
+        stepscontainer.style.overflow = 'auto';
+        //stepscontainer.style.position = 'fixed';
+
+        var container = document.createElement('div');
+        container.style.border = '1px solid lightGray';
+        container.style.background = '#ffffff';
+        container.style.width = '100%';
+        container.style.height = '40%';
+        container.style.overflow = 'auto';
+
+        container.innerHTML = '<br><br><br>';
+
+        var animTypeLabel = document.createElement('label');
+        animTypeLabel.innerHTML = 'Animation Type ';
+
+        var tempSTring= "";
+        var animationType = document.createElement("select");
+        animationType.type = "text";
+        animationType.id = "animationType";
+        animationType.size = 1;
+        animationType.style.overflow = 'auto';
+        /*animationType.style.width = '100%';
+        animationType.style.height = '100%';*/
+        animationType.options[0] = new Option('Show');
+        animationType.options[1] = new Option('Fade In');
+        animationType.options[2] = new Option('Wipe In');
+        animationType.options[3] = new Option('Fade Out');
+        animationType.onfocusout = function(){
+                console.log("animationType focusout");
+                tempSTring +=  animationType.value + ',';
+        };
+
+        var opacityLabel = document.createElement('label');
+        opacityLabel.innerHTML = 'Opacity For Selected Step ';	
+
+        var opacityMaxValue = document.createElement('label');
+        opacityMaxValue.id="opacityValue";
+        //opacityMaxValue.innerHTML = 100;
+
+        var opacityMinValue = document.createElement('label');
+        opacityMinValue.id="opacityMinValue";
+        //opacityMinValue.innerHTML = 0;
+
+        var opacityValueLabel = document.createElement('label');
+        opacityValueLabel.id="opacityValueLab";
+        opacityValueLabel.innerHTML = "Opacity Value "
+
+        var opacityValue = document.createElement('label');
+        opacityValue.id="opacityValue";
+
+
+        var opacity = document.createElement("input");
+        opacity.type = "range";
+        opacity.id = "opacity";
+        opacity.setAttribute('min',0);
+        opacity.setAttribute('max',100);
+        opacity.setAttribute('value',100);
+        opacity.oninput = function() {
+                console.log("event hit");
+                opacityValue.innerHTML = opacity.value;
+                };
+        opacity.onfocusout = function(){
+                console.log("opacity focusout");
+                tempSTring +=  opacity.value + ',';
+        };
+
+        opacityValue.innerHTML = opacity.value;
+
+        var opacityForOthersLabel = document.createElement('label');
+        opacityForOthersLabel.innerHTML = 'Opacity For Previous Steps  ';	
+
+        var opacityForOthersMaxValue = document.createElement('label');
+        opacityForOthersMaxValue.id="opacityForOthersMaxValue";
+        //opacityForOthersMaxValue.innerHTML = 100;
+
+        var opacityForOthersMinValue = document.createElement('label');
+        opacityForOthersMinValue.id="opacityMinValue";
+        //opacityForOthersMinValue.innerHTML = 0;
+
+        var opacityForOthersValueLabel = document.createElement('label');
+        opacityForOthersValueLabel.id="opacityForOthersValueLabel";
+        opacityForOthersValueLabel.innerHTML = "Opacity Value "
+
+        var opacityForOthersValue = document.createElement('label');
+        opacityForOthersValue.id="opacityForOthersValue";
+
+
+        var opacityForOthers = document.createElement("input");
+        opacityForOthers.type = "range";
+        opacityForOthers.id = "opacityForOthers";
+        opacityForOthers.setAttribute('min',0);
+        opacityForOthers.setAttribute('max',100);
+        opacityForOthers.setAttribute('value',100);
+        opacityForOthers.oninput = function() {
+
+                opacityForOthersValue.innerHTML = opacityForOthers.value;
+                };
+        opacityForOthers.onfocusout = function(){
+                console.log("opacityForOthers focusout");
+                tempSTring +=  opacityForOthers.value + ',';
+        };
+
+        opacityForOthersValue.innerHTML = opacityForOthers.value;
+
+        var cellIdLabel = document.createElement('label');
+        cellIdLabel.innerHTML = 'Selected Cells  ';	
+        //cellIdLabel.style.visibility = "hidden";
+
+        var cellId = document.createElement("textarea");
+        //cellId.type = "textarea";
+        cellId.id = "cellId";
+        //cellId.style.visibility = "hidden";
+        cellId.style.height = '150px';
+        //cellId.style.overflow = 'auto';
+
+        var container = document.createElement('div');
+        container.id = "container";
+        container.className = "container-class";
+        container.style.overflow = "auto";
+        container.style.scrollbarWidth = "thin";
+        container.style.height = "200px";
+        
+        //container.style.border = '1px solid lightGray';
+        //container.style.background = '#ffffff';
+        //container.style.width = '500px';
+        //container.style.height = '500px';
+       // container.style.overflow = 'auto';
+        //var graph = new Graph(container);
+        //graph.setEnabled(false);
+
+
+        var table3 = document.createElement('table');
+        var table3tbody = document.createElement('tbody');
+
+        var table3tr1 = document.createElement('tr');
+        table3tr1.style.height = '40px';
+        var table3td11 = document.createElement('td');
+        var table3td12 = document.createElement('td');
+
+        var table3tr2 = document.createElement('tr');
+        table3tr2.style.height = '40px';
+        var table3td21 = document.createElement('td');
+        var table3td22 = document.createElement('td');
+        var table3td23 = document.createElement('td');
+        var table3td24 = document.createElement('td');
+
+        var table3tr3 = document.createElement('tr');
+        table3tr3.style.height = '40px';
+        var table3td31 = document.createElement('td');
+        var table3td32 = document.createElement('td');
+        var table3td33 = document.createElement('td');
+        var table3td34 = document.createElement('td');
+
+        var table3tr4 = document.createElement('tr');
+        table3tr4.style.height = '80px';
+        var table3td41 = document.createElement('td');
+        table3td41.setAttribute('colspan', '1');
+        
+        var table3td42 = document.createElement('td');
+        var table3td43 = document.createElement('td');
+
+        var table3tr5 = document.createElement('tr');
+        table3tr5.style.height = '40px';
+        var table3td51 = document.createElement('td');
+        table3td51.id = "applied-button-td";
+
+        var table3tr6 = document.createElement('tr');
+        
+        table3td11.appendChild(animTypeLabel);
+        table3td12.appendChild(animationType);
+
+        table3td21.appendChild(opacityLabel);
+        table3td22.appendChild(opacityMinValue);
+        table3td22.appendChild(opacity);
+        table3td22.appendChild(opacityMaxValue);
+        table3td23.appendChild(opacityValueLabel);
+        table3td24.appendChild(opacityValue);
+
+
+        table3td31.appendChild(opacityForOthersLabel);
+        table3td32.appendChild(opacityForOthersMinValue);
+        table3td32.appendChild(opacityForOthers);
+        table3td32.appendChild(opacityForOthersMaxValue);
+        table3td33.appendChild(opacityForOthersValueLabel);
+        table3td34.appendChild(opacityForOthersValue);
+
+        table3tr1.appendChild(table3td11);
+        table3tr1.appendChild(table3td12);
+
+        table3tr2.appendChild(table3td21);
+        table3tr2.appendChild(table3td22);
+        table3tr2.appendChild(table3td23);
+        table3tr2.appendChild(table3td24);
+
+        table3tr3.appendChild(table3td31);
+        table3tr3.appendChild(table3td32);
+        table3tr3.appendChild(table3td33);
+        table3tr3.appendChild(table3td34);
+
+        table3tr4.appendChild(table3td42);
+        table3tr4.appendChild(table3td43);
+        
+        var stepsOption = document.createElement('select');
+        stepsOption.id ="stepsSelect";
+        stepsOption.size = 30;
+        stepsOption.style.scrollbarWidth = 'thin';
+        stepsOption.style.width = '106px';
+        stepsOption.style.height = '230px';
+        
+        // Support Key up-down,click on slides option
+        mxEvent.addListener(stepsOption, 'click', function(evt)
+	{
+            stepsOption.options.selectedIndex = evt.target.index;
+            stepsOption.options.class = null;
+            
+            // Remove input boxes if present any in left sidebar presentation options
+            var select = document.getElementById("stepsSelect");
+            for(var i = 0; i < select.options.length; i++){
+                if(select.options[i].id !== "" && document.getElementById('renameField'+select.options[i].id) !== null){
+                    select.options[i].innerHTML = document.getElementById('renameField'+select.options[i].id).value;
+                }
+                // Give title to slide name
+                select.options[select.selectedIndex].title = select.options[select.selectedIndex].innerHTML;
+            }
+            
+            tempSTring=""; 
+            if( stepsOption.options[stepsOption.selectedIndex].value != 'Step'){
+                //console.log(stepsOption.options[stepsOption.selectedIndex].value);
+                document.getElementById('container').innerHTML = '';
+                var n = stepsOption.options[stepsOption.selectedIndex].value.indexOf("animationtype-");
+                var n1 = stepsOption.options[stepsOption.selectedIndex].value.indexOf("opacity-");
+                var n2 = stepsOption.options[stepsOption.selectedIndex].value.indexOf("celldet-");
+                var n3 = stepsOption.options[stepsOption.selectedIndex].value.indexOf("opacityothers-");
+                var n4 = stepsOption.options[stepsOption.selectedIndex].value.indexOf("img-");
+                n1Len = ("animationtype-").length;
+                n2Len = ("opacity-").length;
+                n3Len = ("celldet-").length;
+                n4Len = ("opacityothers-").length;
+                n5Len = ("img-").length;
+                //var stepDetails=[];
+                animType= stepsOption.options[stepsOption.selectedIndex].value.substring(n+n1Len,n1);
+                //stepDetails.push(animType);
+                opacityVal = stepsOption.options[stepsOption.selectedIndex].value.substring(n1+n2Len,n2);
+                //stepDetails.push(opacityVal);
+                cellDet = stepsOption.options[stepsOption.selectedIndex].value.substring(n2+n3Len,n3);
+                //stepDetails.push(cellDet);
+                opacityRestVal = stepsOption.options[stepsOption.selectedIndex].value.substring(n3+n4Len,n4);
+                //stepDetails.push(opacityRestVal);
+                //console.log("StepDetails array: ",stepDetails);
+                imgData = stepsOption.options[stepsOption.selectedIndex].value.substring(n4+n5Len);
+                //var details = stepsOption.options[stepsOption.selectedIndex].value.split(',');
+                animationType.value = animType;//details[0];
+                opacity.value = opacityVal;//details[1];
+                opacityValue.innerHTML = opacity.value;
+                cellId.value = cellDet;//details[2];
+                opacityForOthers.value = opacityRestVal;//details[3];
+                opacityForOthersValue.innerHTML = opacityForOthers.value;
+
+                var preview = document.createElement('img');
+                            preview.setAttribute('src', 'data:' + 'image/png' +  ';base64,' + imgData);
+                            preview.style.maxWidth = '200px';
+                            preview.style.maxHeight = '100px';
+                            mxUtils.setPrefixedStyle(preview.style, 'transform');
+                            container.appendChild(preview);
+            } else if (stepsOption.options[stepsOption.selectedIndex].value == 'Step') {
+                opacity.value = 100;
+                cellId.value = "";
+                opacityForOthers.value = 100;
+                document.getElementById('container').innerHTML = '';
+            }
+        });
+        
+        /*stepsOption.onchange = function(event)
+        {
+                if( stepsOption.options[stepsOption.selectedIndex].value != 'Step'){
+                    console.log(stepsOption.options[stepsOption.selectedIndex].value);
+                    document.getElementById('container').innerHTML = '';
+                    var n = stepsOption.options[stepsOption.selectedIndex].value.indexOf("animationtype-");
+                    var n1 = stepsOption.options[stepsOption.selectedIndex].value.indexOf("opacity-");
+                    var n2 = stepsOption.options[stepsOption.selectedIndex].value.indexOf("celldet-");
+                    var n3 = stepsOption.options[stepsOption.selectedIndex].value.indexOf("opacityothers-");
+                    var n4 = stepsOption.options[stepsOption.selectedIndex].value.indexOf("img-");
+                    n1Len = ("animationtype-").length;
+                    n2Len = ("opacity-").length;
+                    n3Len = ("celldet-").length;
+                    n4Len = ("opacityothers-").length;
+                    n5Len = ("img-").length;
+                    //var stepDetails=[];
+                    animType= stepsOption.options[stepsOption.selectedIndex].value.substring(n+n1Len,n1);
+                    //stepDetails.push(animType);
+                    opacityVal = stepsOption.options[stepsOption.selectedIndex].value.substring(n1+n2Len,n2);
+                    //stepDetails.push(opacityVal);
+                    cellDet = stepsOption.options[stepsOption.selectedIndex].value.substring(n2+n3Len,n3);
+                    //stepDetails.push(cellDet);
+                    opacityRestVal = stepsOption.options[stepsOption.selectedIndex].value.substring(n3+n4Len,n4);
+                    //stepDetails.push(opacityRestVal);
+                    //console.log("StepDetails array: ",stepDetails);
+                    imgData = stepsOption.options[stepsOption.selectedIndex].value.substring(n4+n5Len);
+                    //var details = stepsOption.options[stepsOption.selectedIndex].value.split(',');
+                    animationType.value = animType;//details[0];
+                    opacity.value = opacityVal;//details[1];
+                    opacityValue.innerHTML = opacity.value;
+                    cellId.value = cellDet;//details[2];
+                    opacityForOthers.value = opacityRestVal;//details[3];
+                    opacityForOthersValue.innerHTML = opacityForOthers.value;
+
+                    var preview = document.createElement('img');
+                                preview.setAttribute('src', 'data:' + 'image/png' +  ';base64,' + imgData);
+                                preview.style.maxWidth = '200px';
+                                preview.style.maxHeight = '100px';
+                                mxUtils.setPrefixedStyle(preview.style, 'transform');
+                                container.appendChild(preview);
+                }
+                else if (stepsOption.options[stepsOption.selectedIndex].value == 'Step') {
+                   // animationType.options.selectedIndex = 0;
+                    opacity.value = 100;
+                    cellId.value = "";
+                    opacityForOthers.value = 100;
+                    document.getElementById('container').innerHTML = '';
+                }
+        }*/
+        
+        if(stepContInnerHtml!=""){
+            stepsOption.innerHTML = stepContInnerHtml;
+        }
+
+        /*cellId.onfocusout = function(){
+                console.log("cellId focusout");
+                tempSTring +=  cellId.value;
+                var select = document.getElementById("stepsSelect");
+                select.options[select.selectedIndex].value = tempSTring;
+        };*/
+
+        var cellForStep = "";
+        
+        var saveStepDetBtn = mxUtils.button('Apply', function()
+        {
+            var AnimationType = document.getElementById("animationType");
+            var Opacity = document.getElementById("opacity");
+            var CellId = document.getElementById("cellId");
+            var OpacityForOthers = document.getElementById("opacityForOthers");
+            var divData = document.getElementById("container");
+            var imgData= divData.getElementsByTagName('img')[0];
+            var src = imgData.src;
+            var cString=  'animationtype-'+AnimationType.options[AnimationType.selectedIndex].value + 'opacity-' + Opacity.value+ 'celldet-' +  cellId.value + 'opacityothers-' + OpacityForOthers.value + 'img-' + src.substring(src.lastIndexOf(',') + 1);
+            var select = document.getElementById("stepsSelect");
+            select.options[select.selectedIndex].value = cString;
+            opacityValue.innerHTML = Opacity.value;
+            opacityForOthersValue.innerHTML = OpacityForOthers.value;
+            
+            //show Saving.. symbol
+            if(select.selectedIndex !== -1){
+                if(document.getElementById("loader") === null || document.getElementById("loader") === undefined){
+                var loader = document.createElement("div");
+                loader.id = "loader";
+                loader.style.marginTop = "3px";
+                loader.style.marginLeft = "40px";
+                loader.style.fontStyle = "oblique";
+                loader.innerHTML = "&nbsp;Saving...";
+                document.getElementById("applied-button-td").append(loader);
+                }else {
+                    document.getElementById('loader').style.visibility = "visible";
+                }
+                //Make "Saving..." Notification hidden
+                setTimeout(function () {
+                    document.getElementById('loader').style.visibility = "hidden";
+                }, 400);
+            }
+        });
+        var noteLabel = document.createElement('label');
+        noteLabel.id="noteLabel";
+        noteLabel.innerHTML = "Note: Please click apply to save changes"
+
+        table3td51.appendChild(saveStepDetBtn);
+        
+        table3tr5.appendChild(table3td51);
+        
+        table3tbody.appendChild(table3tr1);
+        table3tbody.appendChild(table3tr2);
+        table3tbody.appendChild(table3tr3);
+        table3tbody.appendChild(table3tr5);
+        //table3tbody.appendChild(table3tr6);
+
+        table3.appendChild(table3tbody);
+
+        // ADD STEP BUTTON
+        var addTempStepBtn = mxUtils.button('+', function(){
+                document.getElementById('container').innerHTML = '';
+                opacityForOthers.value=100;
+                opacity.value=100;
+                var select = document.getElementById("stepsSelect");
+                /*
+                if (select.options.length >= 1)
+                {
+                        console.log(select.options.length);
+                        var AnimationType = document.getElementById("animationType");
+                    var Opacity = document.getElementById("opacity");
+                    var CellId = document.getElementById("cellId");
+
+                    var cString=  AnimationType.value + ',' + Opacity.value+ ',' + CellId.value;
+                        select.options[select.options.length-1].value = cString;
+
+                        AnimationType.value = "";
+                        Opacity.value = "";
+                        CellId.value = "";
+
+                }*/
+                var cells = editorUi.editor.graph.getSelectionCells();
+                cellForStep = "";
+
+
+                if (cells.length > 0){
+                    console.log("Selection exists");
+                       // graph.getModel().clear();
+
+                    for (var i = 0; i < cells.length; i++){
+                        /*graph.addCell(graph.cloneCells([cells[i]])[0]);
+                        //graph.getModel().setRoot(graph.cloneCells([cells[0]])[0]);
+
+
+                        //graph.maxFitScale = 0.6;
+                       // graph.fit(8);
+                        //graph.center();*/
+                        console.log(cells[i]);
+
+                        if(cells[i].vertex && cells[i].style!=null && !cells[i].style.includes("text"))
+                        {
+                                if(cells[i].style.includes("container"))
+                                {
+                                        if(cells[i].value)
+                                                {
+                                                cellForStep = cellForStep  + 'CellId ' + cells[i].id + ' celltext '+ cells[i].value  + '\n';
+                                                }
+                                        else
+                                                {
+                                                cellForStep = cellForStep + 'CellId ' + cells[i].id + ' celltext NoText' + '\n';
+                                                }
+                                        var descendants=editorUi.editor.graph.getModel().getDescendants(cells[i]);
+                                console.log("in container");
+                                for (var j = 0; j < descendants.length; j++)
+                                {
+
+                                        if(descendants[j].parent.id==cells[i].id)
+                                        {
+                                                console.log("in desc");
+                                                if(descendants[j].value)
+                                                        {
+                                                        cellForStep = cellForStep + 'CellId ' + descendants[j].id + ' celltext '+ descendants[j].value  + '\n';
+                                                        }
+                                                else
+                                                        {
+                                                        cellForStep = cellForStep + 'Cellid '+ descendants[j].id  + ' celltext NoText'+ '\n';
+                                                        }
+                                        }
+                                }
+                                }
+                                else
+                                {
+                            if(cells[i].value)
+                            {
+                                cellForStep = cellForStep + 'CellId ' + cells[i].id + ' celltext '+ cells[i].value  + '\n';
+                            }
+                            else
+                            {
+                                cellForStep = cellForStep +  'CellId '+ cells[i].id  + ' celltext ' + 'NoText' + '\n';
+                            }
+                                }
+                        }
+                        else {
+                            if (cells[i].edge && (cells[i].value == null || cells[i].value == "")) {
+                                console.log("In edge cell value null or empty");
+                                cellForStep = cellForStep + 'Cellid ' + cells[i].id + ' celltext NoText' + '\n';
+                                var descendants = editorUi.editor.graph.getModel().getDescendants(cells[i]);
+                                if (descendants.length > 1){
+                                    for (var j = 0; j < descendants.length; j++){
+                                        console.log("Descendants exist: " + descendants.length + "Desc " + i + " Value " + descendants[j].value);
+                                        if (descendants[j].value && descendants[j].parent.id == cells[i].id){
+                                            console.log("Descendants exist if loop");
+                                            if (descendants[j].value != ""){
+                                                cellForStep = cellForStep + 'Cellid ' + descendants[j].id + ' celltext ' + descendants[j].value + '\n';
+                                            }
+                                            /*else if(descendants[j].value=="" || descendants[j].value==null)
+                                             {
+                                             list.value = list.value + 'show NoText'  + ' cellid'+ cells[i].id + ' direct\n';
+                                             }*/
+                                        }
+                                    }
+                                }
+                                if (descendants == null || (descendants.length == 1 && (descendants[0].value == null || descendants[0].value == "")))
+                                {
+                                    console.log("Descendants dont exists=");
+                                    //cellForStep = cellForStep + 'CellText NoText'  + ' cellid '+ cells[i].id + '\n';
+                                }
+                            } else if (cells[i].edge && cells[i].value != null) {
+                                console.log("In edge cell value not empty");
+                                cellForStep = cellForStep + 'Cellid ' + cells[i].id + ' celltext ' + cells[i].value + '\n';
+                            }
+                            //text node
+                            else if (cells[i].vertex && cells[i].style.includes("text") && cells[i].value != null){
+                                cellForStep = cellForStep + 'Cellid ' + cells[i].id + ' celltext ' + cells[i].value + '\n';
+                            }
+                        }                             
+                    }
+
+                    //var bounds = graph.getGraphBounds();
+                    //container.width = bounds.width;
+                    //container.height = bounds.height;
+                    var optionStepNumber = (select.options.length+1);
+                    var optionText = 'Step' + ' ' + optionStepNumber;
+                    select.options[select.options.length] = new Option(optionText, 'Step');
+                    select.options.selectedIndex = select.options.length-1;
+                    console.log(cellForStep);
+                    cellId.value = cellForStep;
+
+                    //var cString=  animationType.options[animationType.selectedIndex].value + ',' + opacity.value+ ',' +  cellId.value + ',' + opacityForOthers.value;
+                   // var cString=  'animationtype-'+animationType.options[animationType.selectedIndex].value + 'opacity-' + opacity.value+ 'celldet-' +  cellId.value + 'opacityothers-' + opacityForOthers.value;
+
+                    var cString; 
+                    editorUi.exportToCanvas(mxUtils.bind(this, function(canvas){
+                            try{
+                                var data=editorUi.getDataForPreview(canvas,  null, 'png');
+                                if(data != null)
+                                {
+                                    data= data.substring(data.lastIndexOf(',') + 1);
+                                    var preview = document.createElement('img');
+                                    preview.setAttribute('src', 'data:' + 'image/png' +  ';base64,' + data);
+                                    preview.style.maxWidth = '200px';
+                                    preview.style.maxHeight = '100px';
+                                    //preview.style.width = '82px';
+                                    mxUtils.setPrefixedStyle(preview.style, 'transform');
+                                    container.appendChild(preview);
+                                    cString=  'animationtype-'+animationType.options[animationType.selectedIndex].value + 'opacity-' + opacity.value+ 'celldet-' +  cellId.value + 'opacityothers-' + opacityForOthers.value+'img-'+data;
+                                    console.log(cString);
+                                    select.options[select.selectedIndex].value = cString;
+                                    console.log("Add step value: ",select.options[select.selectedIndex].value);
+                                }
+                            }catch (e){
+                                console.log("Error while creating data of graph");
+                            }
+                    }), null, null, null,null, null, false,  1, false,
+                            false, null, null, null, true);
+
+                    opacityValue.innerHTML = opacity.value;
+                    opacityForOthersValue.innerHTML = opacityForOthers.value;
+                    //var select = document.getElementById("stepsSelect");
+                }else{
+                    alert ('No nodes selected! Please select atleast one node!!');
+                }
+            }
+        );
+
+        // REMOVE STEP BUTTON
+        var removeBtn = mxUtils.button('-', function(){
+            console.log('hi5');
+            var select = document.getElementById("stepsSelect");
+            select.options[select.selectedIndex] =null;
+            animationType.options.selectedIndex = 0 ;
+            opacity.value = 100;
+            opacityValue.innerHTML = opacity.value;
+            cellId.value = "";
+            opacityForOthers.value = 100;
+            opacityForOthersValue.innerHTML = opacityForOthers.value;
+            document.getElementById('container').innerHTML = '';
+
+            for (i=0; i< select.options.length ; i++)
+            {
+                    var stepNumber = i+1;
+                    select.options[i].text = 'Step' + ' ' + stepNumber;
+            }
+         });
+         
+         // Move step up
+         var upBtn = mxUtils.button('Move Up', function(){
+            var $op = $('#stepsSelect option:selected')//,
+           // $this = $(this);
+            if($op.length){
+                $op.first().prev().before($op)
+            }
+         });
+         upBtn.innerHTML = "&#8593;";
+         
+         // Move step down
+         var downBtn = mxUtils.button('Down', function(){
+            var $op = $('#stepsSelect option:selected')//,
+           // $this = $(this);
+            if($op.length){
+                $op.last().next().after($op)
+            }
+         });
+         downBtn.innerHTML = "&#8595;";
+        //stepscontainer.appendChild(stepsOption);
+
+
+        //parentcontainer.appendChild(stepscontainer);
+        //parentcontainer.appendChild(container);
+
+        var table2 = document.createElement('table');
+        table2.style.width = '100%';
+        table2.style.height = '100%';
+        var table2tbody = document.createElement('tbody');
+        var table2tr1 = document.createElement('tr');
+        var table2td11 = document.createElement('td');
+        table2td11.style.width = '140px';
+        var table2td12 = document.createElement('td');
+
+/*
+        table2td11.appendChild(stepscontainer);
+        table2td12.appendChild(container);
+
+        table2tr1.appendChild(table2td11);
+        table2tr1.appendChild(table2td12);
+
+        table2tbody.appendChild(table2tr1);
+        table2.appendChild(table2tbody);
+
+        td12.appendChild(table2);*/
+        //td11.appendChild(stepscontainer);
+        td12.appendChild(table3);
+        td12.appendChild(noteLabel);
+
+        var graph = new Graph(container);
+        graph.setEnabled(false);
+        graph.setPanning(true);
+        graph.foldingEnabled = false;
+        graph.panningHandler.ignoreCell = true;
+        graph.panningHandler.useLeftButtonForPanning = true;
+        graph.minFitScale = null;
+        graph.maxFitScale = null;
+        graph.centerZoom = true;
+
+        editorUi.selectPage(editorUi.pages[0]);
+
+        var stepNumber=0;
+        var addStepBtn = mxUtils.button('Add Step', function()
+        {
+            stepNumber++;
+            list.value = list.value + 'Step '+ stepNumber+ '\n';
+        });
+
+       // td31.appendChild(addStepBtn);
+
+
+	var simpleShowBtn = mxUtils.button('Show', function()
+        {
+
+    var cells = editorUi.editor.graph.getSelectionCells();
+
+                if (cells.length > 0)
+                {
+                        for (var i = 0; i < cells.length; i++)
+                        {
+
+                                if(cells[i].vertex && cells[i].style!=null && !cells[i].style.includes("text"))
+                                {
+                                        if(cells[i].style.includes("container"))
+                                        {
+                                                if(cells[i].value)
+                                                        {
+                                                list.value = list.value + 'show ' + cells[i].value + ' cellid'+ cells[i].id  + ' direct\n';
+                                                        }
+                                                else
+                                                        {
+                                                        list.value = list.value + 'show NoText' + ' cellid'+ cells[i].id  + ' direct\n';
+                                                        }
+                                                var descendants=editorUi.editor.graph.getModel().getDescendants(cells[i]);
+                                        console.log("in container");
+                                        for (var j = 0; j < descendants.length; j++)
+                                        {
+
+                                                if(descendants[j].parent.id==cells[i].id)
+                                                {
+                                                        console.log("in desc");
+                                                        if(descendants[j].value)
+                                                                {
+                                                        list.value = list.value + 'show ' + descendants[j].value + ' cellid'+ descendants[j].id  + ' direct\n';
+                                                                }
+                                                        else
+                                                                {
+                                                                list.value = list.value + 'show NoText'+ ' cellid'+ descendants[j].id  + ' direct\n';
+                                                                }
+                                                }
+                                        }
+                                        }
+                                        else
+                                        {
+                                    if(cells[i].value)
+                                    {
+                                        list.value = list.value + 'show ' + cells[i].value + ' cellid'+ cells[i].id  + ' direct\n';
+                                    }
+                                    else
+                                    {
+                                        list.value = list.value + 'show ' + 'NoText' + ' cellid'+ cells[i].id  + ' direct\n';
+                                    }
+                                        }
+                                }
+                                else
+                                {
+                                    if(cells[i].edge && (cells[i].value==null || cells[i].value==""))
+                                    {
+                                           console.log("In edge cell value null or empty") ;
+                                            var descendants=editorUi.editor.graph.getModel().getDescendants(cells[i]);
+                                            if(descendants.length > 1)
+                                            {
+                                            for (var j = 0; j < descendants.length; j++)
+                                            {
+                                                console.log("Descendants exist: " + descendants.length + "Desc "+ i +" Value " + descendants[j].value);
+                                                if(descendants[j].value && descendants[j].parent.id==cells[i].id)
+                                                {
+                                                        console.log("Descendants exist if loop");
+                                                        if(descendants[j].value!="")
+                                                        {
+                                                                list.value = list.value + 'show ' + descendants[j].value + ' cellid'+ cells[i].id + ' direct\n';
+                                                        } 
+                                                        /*else if(descendants[j].value=="" || descendants[j].value==null)
+                                                        {
+                                                                list.value = list.value + 'show NoText'  + ' cellid'+ cells[i].id + ' direct\n';
+                                                        }*/
+                                                }
+                                            }
+                                            }
+                                            if(descendants==null || (descendants.length==1 && (descendants[0].value==null || descendants[0].value=="")))
+                                            {
+                                                console.log("Descendants dont exists=");
+                                                list.value = list.value + 'show NoText'  + ' cellid'+ cells[i].id + ' direct\n';
+                                                }
+                                    }
+                                    else if(cells[i].edge && cells[i].value!=null)
+                                    {
+                                        console.log("In edge cell value not empty") ;
+                                        list.value = list.value + 'show ' + cells[i].value + ' cellid'+ cells[i].id  + ' direct\n';
+                                    }
+                                }                                       
+                        }
+
+                        list.value = list.value + 'wait 1000\n';
+                }
+        });
+        //td21.appendChild(simpleShowBtn);
+
+
+        var fadeInBtn = mxUtils.button('Fade In', function()
+        {
+
+            var cells = editorUi.editor.graph.getSelectionCells();
+
+                if (cells.length > 0)
+                {
+                        for (var i = 0; i < cells.length; i++)
+                        {
+                                if(cells[i].vertex && cells[i].style!=null && !cells[i].style.includes("text"))
+                                {
+                                        if(cells[i].style.includes("container"))
+                                        {
+                                                if(cells[i].value)
+                                                        {
+                                                list.value = list.value + 'show ' + cells[i].value + ' cellid'+ cells[i].id  + ' fade\n';
+                                                        }
+                                                else
+                                                        {
+                                                        list.value = list.value + 'show NoText' + ' cellid'+ cells[i].id  + ' fade\n';
+                                                        }
+                                                var descendants=editorUi.editor.graph.getModel().getDescendants(cells[i]);
+                                        console.log("in container");
+                                        for (var j = 0; j < descendants.length; j++)
+                                        {
+
+                                                if(descendants[j].parent.id==cells[i].id)
+                                                {
+                                                        console.log("in desc");
+                                                        if(descendants[j].value)
+                                                                {
+                                                        list.value = list.value + 'show ' + descendants[j].value + ' cellid'+ descendants[j].id  + ' fade\n';
+                                                                }
+                                                        else
+                                                                {
+                                                                list.value = list.value + 'show NoText'+ ' cellid'+ descendants[j].id  + ' fade\n';
+                                                                }
+                                                }
+                                        }
+                                        }
+                                        else
+                                        {
+                                    if(cells[i].value)
+                                    {
+                                        list.value = list.value + 'show ' + cells[i].value + ' cellid'+ cells[i].id  + ' fade\n';
+                                    }
+                                    else
+                                    {
+                                        list.value = list.value + 'show NoText'  + ' cellid'+ cells[i].id  + ' fade\n';
+                                    }
+                                        }
+                                }
+                                else
+                                {
+                                    if(cells[i].edge && (cells[i].value==null || cells[i].value==""))
+                                    {
+
+                                            var descendants=editorUi.editor.graph.getModel().getDescendants(cells[i]);
+                                            if(descendants.length > 1)
+                                            {
+                                            for (var j = 0; j < descendants.length; j++)
+                                            {
+
+                                            if(descendants[j].value && descendants[j].parent.id==cells[i].id)
+                                            {
+                                                if(descendants[j].value!="")
+                                                {
+                                                    list.value = list.value + 'show ' + descendants[j].value + ' cellid'+ cells[i].id + ' fade\n';
+                                                } 
+
+                                            }
+
+                                            }
+                                            }
+                                            if(descendants==null || (descendants.length==1 && (descendants[0].value==null || descendants[0].value=="")))
+                                            {
+                                                console.log("Descendants dont exist");
+                                                list.value = list.value + 'show NoText'  + ' cellid'+ cells[i].id + ' fade\n';
+                                                }
+                                    }
+                                    else if(cells[i].edge && cells[i].value!=null)
+                                    {
+
+                                        list.value = list.value + 'show ' + cells[i].value + ' cellid'+ cells[i].id  + ' fade\n';
+                                    }
+                                }                                 
+                        }
+
+                        list.value = list.value + 'wait 1000\n';
+                }
+        });
+        //td21.appendChild(fadeInBtn);
+
+        var animateBtn = mxUtils.button('Wipe In', function()
+        {
+                var cells = editorUi.editor.graph.getSelectionCells();
+
+                if (cells.length > 0)
+                {
+                        for (var i = 0; i < cells.length; i++)
+                        {
+                                if(cells[i].vertex && cells[i].style!=null && !cells[i].style.includes("text"))
+                                {
+                                        if(cells[i].style.includes("container"))
+                                        {
+                                                if(cells[i].value)
+                                                        {
+                                                list.value = list.value + 'show ' + cells[i].value + ' cellid'+ cells[i].id  + '\n';
+                                                        }
+                                                else
+                                                        {
+                                                        list.value = list.value + 'show NoText' + ' cellid'+ cells[i].id  + '\n';
+                                                        }
+                                                var descendants=editorUi.editor.graph.getModel().getDescendants(cells[i]);
+                                        console.log("in container");
+                                        for (var j = 0; j < descendants.length; j++)
+                                        {
+
+                                                if(descendants[j].parent.id==cells[i].id)
+                                                {
+                                                        console.log("in desc");
+                                                        if(descendants[j].value)
+                                                                {
+                                                        list.value = list.value + 'show ' + descendants[j].value + ' cellid'+ descendants[j].id  + '\n';
+                                                                }
+                                                        else
+                                                                {
+                                                                list.value = list.value + 'show NoText'+ ' cellid'+ descendants[j].id  + '\n';
+                                                                }
+                                                }
+                                        }
+                                        }
+                                else
+                                        {
+                                    if(cells[i].value)
+                                    {
+                                        list.value = list.value + 'show ' + cells[i].value + ' cellid'+ cells[i].id  + '\n';
+                                    }
+                                    else
+                                    {
+                                        list.value = list.value + 'show NoText'  + ' cellid'+ cells[i].id  + '\n';
+                                        }
+                                        }
+                                }
+                                else
+                                {
+                                    if(cells[i].edge && (cells[i].value==null || cells[i].value==""))
+                                    {
+
+                                            var descendants=editorUi.editor.graph.getModel().getDescendants(cells[i]);
+                                            if(descendants.length > 1)
+                                            {
+                                            for (var j = 0; j < descendants.length; j++)
+                                            {
+
+                                            if(descendants[j].value && descendants[j].parent.id==cells[i].id)
+                                            {
+                                                if(descendants[j].value!="")
+                                                {
+                                                    list.value = list.value + 'show ' + descendants[j].value + ' cellid'+ cells[i].id + '\n';
+                                                } 
+
+                                            }
+                                            }
+
+                                            }
+                                            if(descendants==null || (descendants.length==1 && (descendants[0].value==null || descendants[0].value=="")))
+                                            {
+                                                console.log("Descendants dont exist");
+                                                list.value = list.value + 'show NoText'  + ' cellid'+ cells[i].id + '\n';
+                                                }
+                                    }
+                                    else if(cells[i].edge && cells[i].value!=null)
+                                    {
+
+                                        list.value = list.value + 'show ' + cells[i].value + ' cellid'+ cells[i].id  + '\n';
+                                    }
+                                }
+
+                        }
+
+                        list.value = list.value + 'wait 1000\n';
+                }
+        });
+        //td21.appendChild(animateBtn);
+
+        var addBtn = mxUtils.button('Fade Out', function()
+        {
+                var cells = editorUi.editor.graph.getSelectionCells();
+
+                if (cells.length > 0)
+                {
+                        for (var i = 0; i < cells.length; i++)
+                        {
+                                if(cells[i].vertex  && cells[i].style!=null && !cells[i].style.includes("text"))
+            {
+                                        if(cells[i].style.includes("container"))
+                {
+                        if(cells[i].value)
+                                {
+                        list.value = list.value + 'hide ' + cells[i].value + ' cellid'+ cells[i].id  + '\n';
+                                }
+                        else
+                                {
+                                list.value = list.value + 'hide NoText' + ' cellid'+ cells[i].id  + '\n';
+                                }
+                        var descendants=editorUi.editor.graph.getModel().getDescendants(cells[i]);
+                    console.log("in container");
+                    for (var j = 0; j < descendants.length; j++)
+                    {
+
+                        if(descendants[j].parent.id==cells[i].id)
+                        {
+                                console.log("in desc");
+                                if(descendants[j].value)
+                                        {
+                                list.value = list.value + 'hide ' + descendants[j].value + ' cellid'+ descendants[j].id  + '\n';
+                                        }
+                                else
+                                        {
+                                        list.value = list.value + 'hide NoText'+ ' cellid'+ descendants[j].id  + '\n';
+                                        }
+                        }
+                    }
+                }
+
+
+
+                                else
+                                        {
+                                    if(cells[i].value)
+                                    {
+                                        list.value = list.value + 'hide ' + cells[i].value + ' cellid'+ cells[i].id  + '\n';
+                                    }
+                                    else
+                                    {
+                                        list.value = list.value + 'hide NoText'  + ' cellid'+ cells[i].id  + '\n';
+                                    }
+                                        }
+                                                }
+                                else
+                                {
+                                    if(cells[i].edge && (cells[i].value==null || cells[i].value==""))
+                                    {
+
+                                            var descendants=editorUi.editor.graph.getModel().getDescendants(cells[i]);
+                                            if(descendants.length > 1)
+                                            {
+                                            for (var j = 0; j < descendants.length; j++)
+                                            {
+
+                                            if(descendants[j].value && descendants[j].parent.id==cells[i].id)
+                                            {
+                                                if(descendants[j].value!="")
+                                                {
+                                                    list.value = list.value + 'hide ' + descendants[j].value + ' cellid'+ cells[i].id + '\n';
+                                                } 
+
+                                            }
+                                            else
+                                            {
+                                                list.value = list.value + 'hide NoText'  + ' cellid'+ cells[i].id + '\n';
+                                                }
+
+                                        }
+                                            }
+                                            if(descendants==null || (descendants.length==1 && (descendants[0].value==null || descendants[0].value=="")))
+                                            {
+                                                console.log("Descendants dont exist");
+                                                list.value = list.value + 'hide NoText'  + ' cellid'+ cells[i].id + '\n';
+                                                }
+
+                                    }
+                                    else if(cells[i].edge && cells[i].value!=null)
+                                    {
+
+                                        list.value = list.value + 'hide ' + cells[i].value + ' cellid'+ cells[i].id  + '\n';
+                                    }
+                                }
+                        }
+
+                        list.value = list.value + 'wait 1000\n';
+                }
+        });
+        
+        var waitBtn = mxUtils.button('Wait', function(){
+                list.value = list.value + 'wait 1000\n';
+        });
+        
+        var clearBtn = mxUtils.button('Reset', function(){
+            document.getElementById('container').innerHTML = '';
+            stepsOption.options.length = 0;
+            cellId.value = "";
+            opacity.value = 100;
+            opacityValue.innerHTML = opacity.value;
+            opacityForOthers.value = 100;
+            opacityForOthersValue.innerHTML = opacityForOthers.value;
+        });
+        
+        var advanceBtn = mxUtils.button('Advance', function(){
+            var link = document.createElement('a');
+            link.className = 'geButton';
+        });
+        
+        var runBtn = mxUtils.button('Preview', function()
+        {
+                graph.getModel().clear();
+                graph.getModel().setRoot(graph.cloneCells([editorUi.editor.graph.getModel().getRoot()])[0]);
+                graph.maxFitScale = 1;
+                graph.fit(8);
+                graph.center();
+
+                global_step=run(editorUi,graph, list.value.split('\n'));
+        });
+        //td21.appendChild(runBtn);
+
+        var stopBtn = mxUtils.button('Stop', function()
+        {
+                graph.getModel().clear();
+                stop();
+        });
+        //td21.appendChild(stopBtn);
+
+
+       // var elem = null;
+        var applyBtn = mxUtils.button('Apply', function()
+        {
+            editorUi.selectPage(editorUi.pages[0]);
+            window.steps=0;
+            window.pageNo=0;
+            var presentation_container = document.createElement('div');
+            presentation_container.style.border = '1px solid lightGray';
+            presentation_container.style.background = '#ffffff';
+            presentation_container.style.width = '100%';
+            presentation_container.style.height = '100%';
+            presentation_container.style.overflow = 'auto';
+
+            var newgraph = new Graph(presentation_container);
+            newgraph.setEnabled(false);
+            newgraph.setPanning(true);
+            newgraph.foldingEnabled = false;
+            newgraph.panningHandler.ignoreCell = true;
+            newgraph.panningHandler.useLeftButtonForPanning = true;
+            newgraph.minFitScale = null;
+            newgraph.maxFitScale = null;
+            /*newgraph.centerZoom = true;
+           // newgraph.zoom(2)
+            //newgraph.view.scaleAndTranslate(2)
+            //newgraph.fit();
+            //newgraph.center();
+
+           // newgraph=editorUi.editor.graph;*/
+            newgraph.getModel().clear();
+            newgraph.getModel().setRoot(newgraph.cloneCells([editorUi.editor.graph.getModel().getRoot()])[0]);
+            var mapping = mapCell(editorUi.editor.graph.getModel().getRoot(), newgraph.getModel().getRoot());
+            newgraph.getModel().beginUpdate();
+                try
+                {
+                        for (var id in newgraph.getModel().cells)
+                        {
+                                var cell = newgraph.getModel().cells[id];
+                                console.log("Cell id after Model updated: "+ cell.id + " Value: " + cell.value + " Style: "+ cell.style);
+                                if (newgraph.getModel().isVertex(cell) || newgraph.getModel().isEdge(cell))
+                                {
+                                        newgraph.setCellStyles('opacity', '0', [cell]);
+                                        newgraph.setCellStyles('noLabel', '1', [cell]);
+                                }
+                        }
+                }
+                finally
+                {
+                        newgraph.getModel().endUpdate();
+                }
+
+            document.body.appendChild(presentation_container);
+           // alert(newgraph.getModel().getRoot());
+
+            /*
+                editorUi.editor.graph.setAttributeForCell(root, 'animation', list.value);
+                //this.presentationwindow =new PresentationWindow();
+                //this.presentationwindow.window.setVisible(true);
+                /*this.window.moveTo(0, 0);
+
+                if (document.all) {
+                    top.window.resizeTo(screen.availWidth, screen.availHeight);
+                                  }
+
+                else if (document.layers || document.getElementById) {
+                        if (top.window.outerHeight < screen.availHeight || top.window.outerWidth < screen.availWidth) {
+                                top.window.outerHeight = screen.availHeight;
+                                top.window.outerWidth = screen.availWidth;
+                                }
+                        }*/
+                /*elem=container;
+
+
+                if (elem.requestFullscreen) {
+                            elem.requestFullscreen();
+                        } else if (elem.mozRequestFullScreen) { /* Firefox */
+                          /*  elem.mozRequestFullScreen()
+                } else if (elem.webkitRequestFullscreen) { /* Chrome, Safari & Opera */
+                        /*    elem.webkitRequestFullscreen();
+                } else if (elem.msRequestFullscreen) { /* IE/Edge */
+                          /*  elem.msRequestFullscreen();
+
+                }*/
+
+                //Uncomment below code to auto run animation
+                /*
+                editorUi.editor.graph.setAttributeForCell(root, 'animation', list.value);
+
+                elem=container;
+
+
+                if (elem.requestFullscreen) {
+                            elem.requestFullscreen();
+                        } else if (elem.mozRequestFullScreen) { 
+                            elem.mozRequestFullScreen();
+                } else if (elem.webkitRequestFullscreen) {  
+                            elem.webkitRequestFullscreen();
+                } else if (elem.msRequestFullscreen) { 
+                            elem.msRequestFullscreen();
+
+                }
+                graph.getModel().clear();
+                graph.getModel().setRoot(graph.cloneCells([editorUi.editor.graph.getModel().getRoot()])[0]);
+                graph.maxFitScale = 1;
+                graph.fit(8);
+                graph.center();
+
+
+                run(editorUi,graph, list.value.split('\n'));
+                */
+
+
+                elem=presentation_container;
+
+                editorUi.editor.graph.setAttributeForCell(root, 'animation', list.value);
+                editorUi.editor.graph.setAttributeForCell(root, 'steps',stepsOption.innerHTML );
+
+                if (elem.requestFullscreen) {
+
+                            elem.requestFullscreen();
+                        } else if (elem.mozRequestFullScreen) { 
+
+                            elem.mozRequestFullScreen();
+                } else if (elem.webkitRequestFullscreen) {  
+
+                            elem.webkitRequestFullscreen();
+                } else if (elem.msRequestFullscreen) { 
+
+                            elem.msRequestFullscreen();
+
+                }
+
+
+            var margin = 2;
+            var max = 1.5;
+
+            var bounds = newgraph.getGraphBounds();
+            var cw = newgraph.container.clientWidth - margin;
+            var ch = newgraph.container.clientHeight - margin;
+            var w = bounds.width / newgraph.view.scale;
+            var h = bounds.height / newgraph.view.scale;
+            var s = Math.min(max, Math.min(cw / w, ch / h));
+
+            newgraph.view.scaleAndTranslate(s,
+            (margin + cw - w * s) / (2 * s) - bounds.x / newgraph.view.scale,
+            (margin + ch - h * s) / (2 * s) - bounds.y / newgraph.view.scale);
+
+
+                var tempgraph=newgraph;
+                grpStepDetails=[];
+                //var mapping = mapCell(editorUi.editor.graph.getModel().getRoot(), newgraph.getModel().getRoot());
+                mxEvent.addListener(elem, 'click', function(evt)
+                                        {
+                          window.steps++;
+                                            //alert(list.value);
+                          if(list.value!=null)
+                          {
+                             grpStepDetails=list.value.trim().split(/Step/);
+                          }
+
+                          if(grpStepDetails.length == window.steps)
+                          {
+                             if (document.exitFullscreen) 
+                             {
+                                  document.exitFullscreen();
+
+                             } 
+                             else if (document.mozCancelFullScreen)
+                             { /* Firefox */
+                                  document.mozCancelFullScreen();
+                             }
+                             else if (document.webkitExitFullscreen) 
+                             { /* Chrome, Safari and Opera */
+                                  document.webkitExitFullscreen();
+                             } 
+                             else if (document.msExitFullscreen)
+                             { /* IE/Edge */
+                                  document.msExitFullscreen();
+                             }
+                           }
+
+                            if(grpStepDetails[window.steps]!=null)
+                            {
+                                console.log("Grouped Step "+ grpStepDetails[window.steps]);
+                                stepDetails=grpStepDetails[window.steps].trim().split('\n');
+
+                            }
+                            var mapping = mapCell(editorUi.editor.graph.getModel().getRoot(), tempgraph.getModel().getRoot());
+                            for(x=1; x<stepDetails.length; x++)
+                            {
+                                console.log("Individual Step " + stepDetails[x]);
+                                var tokens = stepDetails[x].split(' ');
+                                //graph.getModel().clear();
+                               //graph.getModel().setRoot(graph.cloneCells([editorUi.editor.graph.getModel().getRoot()])[0]);
+                                if (tokens.length > 0)
+                                {
+                                    if (tokens[0] == 'wait' && tokens.length > 1)
+                                    {
+                                                        continue;
+                                    }
+                                    else if(tokens[0] == 'NextPage')
+                                    {
+                                                        window.pageNo++;
+
+                                                       // var tempGraph=newgraph;
+
+                                                        tempGraph.getModel().setRoot(editorUi.pages[window.pageNo].root);
+
+                                                        tempGraph.getModel().beginUpdate();
+                                                        try
+                                                        {
+                                                            for (var id in tempGraph.getModel().cells)
+                                                            {
+                                                                var cell = tempGraph.getModel().cells[id];
+
+                                                                if (tempGraph.getModel().isVertex(cell) || tempGraph.getModel().isEdge(cell))
+                                                                {
+                                                                    tempGraph.setCellStyles('opacity', '0', [cell]);
+                                                                    tempGraph.setCellStyles('noLabel', '1', [cell]);
+                                                                }
+                                                            }
+                                                        }
+                                                        finally
+                                                        {
+                                                            tempGraph.getModel().endUpdate();
+                                                        }
+
+                                                        var margin = 2;
+                                                        var max = 1.5;
+                                                        var bounds = tempGraph.getGraphBounds();
+                                                        var cw = tempGraph.container.clientWidth - margin;
+                                                        var ch = tempGraph.container.clientHeight - margin;
+                                                        var w = bounds.width / tempGraph.view.scale;
+                                                        var h = bounds.height / tempGraph.view.scale;
+                                                        var s = Math.min(max, Math.min(cw / w, ch / h));
+
+                                                        tempGraph.view.scaleAndTranslate(s,
+                                                                            (margin + cw - w * s) / (2 * s) - bounds.x / tempGraph.view.scale,
+                                                                            (margin + ch - h * s) / (2 * s) - bounds.y / tempGraph.view.scale);
+                                            /*
+                                                        tokens = stepDetails[window.steps].split(' ');
+                                           //alert(stepDetails[window.steps]);
+                                            if (tokens.length > 1)
+                                                {
+                                                    //alert(window.steps);
+                                                        var cell = tempGraph.getModel().getCell(tokens[2].substring(6));
+
+                                                        if (cell != null)
+                                                        {
+                                                                //alert('Cell found');
+                                                                if (tokens[0] == 'show')
+                                                                {
+                                                                        tempGraph.setCellStyles('opacity', '100', [cell]);
+                                                                        tempGraph.setCellStyles('noLabel', null, [cell]);
+
+                                                                        if (tokens.length > 2 && tokens[3] == 'fade')
+                                                                        {
+                                                                                //alert('in fade');
+
+                                                                                        //alert('timeout');
+                                                                                        fadeIn(getNodesForCells(tempGraph, [cell]))
+                                                                                        window.steps++;
+
+                                                                        }
+                                                                        else if(tokens.length > 2 && tokens[3] == 'direct')
+                                                                        {
+                                                                            window.steps++;
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                                animateCells(tempGraph, [cell]);
+                                                                                window.steps++;
+                                                                        }
+
+                                                                }
+                                                                else if (tokens[0] == 'hide')
+                                                                {
+                                                                        tempGraph.setCellStyles('opacity', '100', [cell]);
+                                                                        tempGraph.setCellStyles('noLabel', null, [cell]);
+                                                                        fadeOut(getNodesForCells(tempGraph, [cell]));
+                                                                        window.steps++;
+                                                                }
+
+                                                        }
+                                                        else
+                                                        {
+                                                            //alert('1');
+                                                                alert('Something went wrong!');
+                                                                console.log('cell not found', id, steps[step]);
+                                                        }
+                                                }*/
+                                    }
+                                    else
+                                    {
+                                        if (tokens.length > 1)
+                                        { 
+                        //alert(tokens[2].substring(6));
+                                                //var cell = tempgraph.getModel().getCell(tokens[2].substring(6));
+                                                var cell = mapping[tokens[2].substring(6)];
+                                                if (cell != null)
+                                                {
+                                                        console.log("Cell id: "+ cell.id + " Cell Edge: "+ cell.edge + " Cell Vertex: " + cell.vertex)  ;  
+                                                        console.log("Cell edge : "+ cell.isEdge());
+                                                        //alert('Cell found');
+                                                        if (tokens[0] == 'show')
+                                                        {
+                                                                tempgraph.setCellStyles('opacity', '100', [cell]);
+                                                                tempgraph.setCellStyles('noLabel', null, [cell]);
+
+                                                                if (tokens.length > 2 && tokens[3] == 'fade')
+                                                                {
+                                                                        fadeIn(getNodesForCells(tempgraph, [cell])  )                                              
+                                                                }
+                                                                else if(tokens.length > 2 && tokens[3] == 'direct')
+                                                                {                                    
+                                                                        if(cell.edge)
+                                                                        {
+                                                                                console.log("is edge");
+                                                                                var descendants=editorUi.editor.graph.getModel().getDescendants(cell);
+                                                                                for (var j = 0; j < descendants.length; j++)
+                                                                                {  
+                                                                                        console.log("Descendants of Cell: "+cell.id + " Descendant Parent Id: "+descendants[j].parent.id + " Desc Value: "+descendants[j].value);
+                                                                                        if(descendants.length > 0 && descendants[j].parent.id==cell.id)
+                                                                                        {
+                                                                                                if(descendants[j].value)
+                                                                                                {
+                                                                                                        tempgraph.setCellStyles('opacity', '100', [descendants[j]]);
+                                                                                                        tempgraph.setCellStyles('noLabel', null, [descendants[j]]);
+                                                                                                } 
+                                                                                        }                                         
+                                                                                }
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                                console.log("is not edge")
+                                                                        }
+                                                                }
+                                                                else
+                                                                {
+                                                                        animateCells(tempgraph, [cell]);
+
+                                                                }
+
+                                                }
+                                                else if (tokens[0] == 'hide')
+                                                {
+                                                        tempgraph.setCellStyles('opacity', '100', [cell]);
+                                                                tempgraph.setCellStyles('noLabel', null, [cell]);
+                                                        fadeOut(getNodesForCells(tempgraph, [cell]));
+
+                                                }
+
+                                        }
+                                        else
+                                        {
+                                                alert('Something went wrong!');
+                                                                        //console.log('cell not found', id, steps[step]);
+                                        }
+                                        }
+
+                                   }
+                                            //alert(window.steps);
+
+                    }
+                }
+
+                                        //list.value= list.value + 'S ' +window.steps + 'G ' + grpStepDetails.length + '\n';
+
+                                        });
+
+
+
+
+
+        });
+
+	var nextPageBtn = mxUtils.button('Next Page', function()
+        {
+            list.value = list.value + 'NextPage\n';
+        });
+
+
+       /* var refreshBtn = mxUtils.button('Refresh ', function()
+        {
+            editorUi.editor.graph.getModel().setRoot(  editorUi.editor.graph.cloneCells([editorUi.pages[0].root])[0]);
+            root=editorUi.editor.graph.getModel().getRoot();
+
+
+          //alert();
+        if (root.value != null && typeof(root.value) == 'object')
+        {
+
+                //graph.getModel().clear();
+                //graph.getModel().setRoot(graph.cloneCells([editorUi.editor.graph.getModel().getRoot()])[0]);
+                //alert(root.value.getAttribute('animation'));
+                list.value = root.value.getAttribute('animation');
+                if(list.value!=null)
+                        {
+                grpStepDetails=list.value.trim().split(/Step/);
+                        }
+                if(grpStepDetails.length > 0)
+                {
+                    stepNumber=grpStepDetails.length-1;
+                }
+                else
+                {
+                    stepNumber=0;
+                }
+
+                if(root.value.getAttribute('animation')==null || root.value.getAttribute('animation')=="")
+                {
+                    list.value="";
+                }
+        }
+        else
+        {
+            list.value= "";
+        }
+
+
+        });*/
+        
+        
+    var testapplyBtn = mxUtils.button('Start', function(){
+        editorUi.selectPage(editorUi.pages[0]);
+        window.steps=0;
+        window.pageNo=0;
+        var presentation_container = document.createElement('div');
+        presentation_container.style.border = '1px solid lightGray';
+        presentation_container.style.background = '#ffffff';
+        presentation_container.style.width = '100%';
+        presentation_container.style.height = '100%';
+        presentation_container.style.overflow = 'auto';
+
+        var newgraph = new Graph(presentation_container);
+        newgraph.setEnabled(false);
+        newgraph.setPanning(true);
+        newgraph.foldingEnabled = false;
+        newgraph.panningHandler.ignoreCell = true;
+        newgraph.panningHandler.useLeftButtonForPanning = true;
+        newgraph.minFitScale = null;
+        newgraph.maxFitScale = null;
+        //newgraph.centerZoom = true;
+       // newgraph.zoom(2)
+        //newgraph.view.scaleAndTranslate(2)
+        //newgraph.fit();
+        //newgraph.center();
+       // newgraph=editorUi.editor.graph;
+        newgraph.getModel().clear();
+        newgraph.getModel().setRoot(newgraph.cloneCells([editorUi.editor.graph.getModel().getRoot()])[0]);
+        var mapping = mapCell(editorUi.editor.graph.getModel().getRoot(), newgraph.getModel().getRoot());
+        newgraph.getModel().beginUpdate();
+        try
+        {
+                for (var id in newgraph.getModel().cells)
+                {
+                        var cell = newgraph.getModel().cells[id];
+                        console.log("Cell id after Model updated: "+ cell.id + " Value: " + cell.value + " Style: "+ cell.style);
+                        if (newgraph.getModel().isVertex(cell) || newgraph.getModel().isEdge(cell))
+                        {
+                                newgraph.setCellStyles('opacity', '0', [cell]);
+                                newgraph.setCellStyles('noLabel', '1', [cell]);
+                        }
+                }
+        }
+        finally
+        {
+                newgraph.getModel().endUpdate();
+        }
+
+        dictSteps={};
+        for (i=0; i < stepsOption.options.length; i++){
+            var stepDetails=[];
+            if(stepsOption.options[i]!=null && stepsOption.options[i].value!=null) {
+                console.log("Step "+ stepsOption.options[i].value);
+                var n = stepsOption.options[i].value.indexOf("animationtype-");
+                var n1 = stepsOption.options[i].value.indexOf("opacity-");
+                var n2 = stepsOption.options[i].value.indexOf("celldet-");
+                var n3 = stepsOption.options[i].value.indexOf("opacityothers-");
+                var n4= stepsOption.options[i].value.indexOf("img-");
+                n1Len = ("animationtype-").length;
+                n2Len = ("opacity-").length;
+                n3Len = ("celldet-").length;
+                n4Len = ("opacityothers-").length;
+                n5Len = ("img-").length;
+
+                var stepDetails=[];
+                animType= stepsOption.options[i].value.substring(n+n1Len,n1);
+                stepDetails.push(animType);
+                opacityVal = stepsOption.options[i].value.substring(n1+n2Len,n2);
+                stepDetails.push(opacityVal);
+                cellDet = stepsOption.options[i].value.substring(n2+n3Len,n3);
+                stepDetails.push(cellDet);
+                opacityRestVal = stepsOption.options[i].value.substring(n3+n4Len,n4);
+                stepDetails.push(opacityRestVal);
+                console.log("StepDetails array: ",stepDetails);
+                //stepDetails = stepsOption.options[i].value.split(',');
+            }
+              		  	
+            var grpSteps =[];
+            if((stepDetails!==null || stepDetails!=='undefined') && stepDetails.length >=2){
+              grpSteps = stepDetails[2].split('\n');
+              console.log("Group steps length: ",grpSteps.length);
+            }
+            var cellsSelected=[];
+            for(x=0; x<= grpSteps.length-1; x++){
+                console.log("Individual Step " + grpSteps[x]);
+                  var tokens = grpSteps[x].split(' ');
+                  if (tokens.length > 1){
+                        cellsSelected.push(tokens[1]);
+                  }
+            }
+            dictSteps[i]=cellsSelected;
+        }
+        console.log(dictSteps);
+        document.body.appendChild(presentation_container);
+        elem=presentation_container;
+
+        editorUi.editor.graph.setAttributeForCell(root, 'animation', list.value);
+        editorUi.editor.graph.setAttributeForCell(root, 'steps',stepsOption.innerHTML );
+
+        if (elem.requestFullscreen) {
+            elem.requestFullscreen();
+        } else if (elem.mozRequestFullScreen) { 
+            elem.mozRequestFullScreen();
+        } else if (elem.webkitRequestFullscreen) {  
+            elem.webkitRequestFullscreen();
+        } else if (elem.msRequestFullscreen) { 
+            elem.msRequestFullscreen();
+        }
+        var margin = 10;
+        var max = 1.5;
+
+        var bounds = newgraph.getGraphBounds();
+        var cw = newgraph.container.clientWidth - margin;
+        var ch = newgraph.container.clientHeight - margin;
+        var w = bounds.width / newgraph.view.scale;
+        var h = bounds.height / newgraph.view.scale;
+        var s = Math.min(max, Math.min(cw / w, ch / h));
+
+        newgraph.view.scaleAndTranslate(s,
+            (margin + cw - w * s) / (2 * s) - bounds.x / newgraph.view.scale,
+            (margin + ch - h * s) / (2 * s) - bounds.y / newgraph.view.scale);
+
+        var tempgraph=newgraph;
+        grpStepDetails=[];
+        
+        // DISPLAYING PRESENTATION WITH ARROW CLICKS
+        mxEvent.addListener(elem, 'click', function(evt) {
+            
+            window.steps++; //alert(list.value);
+            
+            if( (stepsOption.options!=null || stepsOption.options!='undefined') && stepsOption.options.length+1 == window.steps){
+               if (document.exitFullscreen){
+                   document.exitFullscreen();
+               }else if (document.mozCancelFullScreen){ /* Firefox */
+                   document.mozCancelFullScreen();
+               }else if (document.webkitExitFullscreen){ /* Chrome, Safari and Opera */
+                   document.webkitExitFullscreen();
+               }else if (document.msExitFullscreen){ /* IE/Edge */
+                   document.msExitFullscreen();
+               }
+             }
+            /* var stepDetails=[];if(stepsOption.options[window.steps-1]!=null && stepsOption.options[window.steps-1].value!=null)
+             {console.log("Step "+ stepsOption.options[window.steps-1].value);stepDetails = stepsOption.options[window.steps-1].value.split(',');
+             }var mapping = mapCell(editorUi.editor.graph.getModel().getRoot(), tempgraph.getModel().getRoot());
+             var grpSteps =[];
+             if((stepDetails!=null || stepDetails!='undefined') && stepDetails.length >=2){
+                 grpSteps = stepDetails[2].split('\n');}var cellsSelected=[];
+             for(x=0; x<= grpSteps.length-1; x++)
+             {
+                 console.log("Individual Step " + grpSteps[x]);
+                 var tokens = grpSteps[x].split(' ');
+
+                 if (tokens.length > 1)
+                 {
+                         cellsSelected.push(tokens[3]);
+                         /*if (tokens.length > 1)
+                         {
+                                 console.log(tokens[3]);
+                                 var cell = mapping[tokens[3]];
+                                 if (cell != null)
+                                 {
+                                         console.log("Cell id: "+ cell.id + " Cell Edge: "+ cell.edge + " Cell Vertex: " + cell.vertex)  ;  
+                                         console.log("Cell edge : "+ cell.isEdge());
+                                         //alert('Cell found');
+                                         if (stepDetails[0] == 'Show')
+                                         {
+                                                 tempgraph.setCellStyles('opacity', stepDetails[1], [cell]);
+                                                 tempgraph.setCellStyles('noLabel', null, [cell]);
+
+                                                         if(cell.edge)
+                                                         {
+                                                                 console.log("is edge");
+                                                                 var descendants=editorUi.editor.graph.getModel().getDescendants(cell);
+                                                                 for (var j = 0; j < descendants.length; j++)
+                                                                 {  
+                                                                         console.log("Descendants of Cell: "+cell.id + " Descendant Parent Id: "+descendants[j].parent.id + " Desc Value: "+descendants[j].value);
+                                                                         if(descendants.length > 0 && descendants[j].parent.id==cell.id)
+                                                                         {
+                                                                                 if(descendants[j].value)
+                                                                                 {
+                                                                                         tempgraph.setCellStyles('opacity', stepDetails[1], [descendants[j]]);
+                                                                                         tempgraph.setCellStyles('noLabel', null, [descendants[j]]);
+                                                                                 } 
+                                                                         }                                         
+                                                                 }
+                                                         }
+                                                         else
+                                                         {
+                                                                 console.log("is not edge")
+                                                         }
+                                         }
+                                         else if(stepDetails[0] == 'Wipe In' )
+                                         {
+                                                 tempgraph.setCellStyles('opacity', stepDetails[1], [cell]);
+                                                 tempgraph.setCellStyles('noLabel', null, [cell]);
+                                                 animateCells(tempgraph, [cell]);
+
+                                         }
+                                         else if (stepDetails[0] == 'Fade In')
+                                         {
+                                                 tempgraph.setCellStyles('opacity', stepDetails[1], [cell]);
+                                                 tempgraph.setCellStyles('noLabel', null, [cell]);
+                                                 fadeIn(getNodesForCells(tempgraph, [cell])  )                                              
+                                         }
+                                         else if (stepDetails[0] == 'Fade Out')
+                                         {
+                                                 tempgraph.setCellStyles('opacity', stepDetails[1], [cell]);
+                                                 tempgraph.setCellStyles('noLabel', null, [cell]);
+                                                 fadeOut(getNodesForCells(tempgraph, [cell]));
+
+                                         }
+
+                                 }
+                                 else
+                         {
+                                 alert('Something went wrong!');
+                                                         //console.log('cell not found', id, steps[step]);
+                         }
+                         }
+
+                 }
+             }//for
+             console.log(cellsSelected);*/
+            var cellsInPrevSteps = [];
+            var allCellsInPrevStep =[];
+            /*if( window.steps > 1){
+                j=0;
+                while(j != window.steps){
+                    if(evt.keyCode == '37' || evt.keyCode == '38'){
+                        var temp = dictSteps[i];
+                        cellsInPrevSteps=allCellsInPrevStep.replace(temp, '');
+                        j--;
+                        //allCellsInPrevStep=cellsInPrevSteps;
+                    }else if(evt.keyCode == '39' || evt.keyCode == '40'){
+                        var temp = dictSteps[i];
+                        cellsInPrevSteps=allCellsInPrevStep.concat(temp);
+                        allCellsInPrevStep=cellsInPrevSteps;
+                        j++;
+                    }   
+                }
+            }*/
+            
+             for(i = 0; i < window.steps-1 ; i++ ){
+                    var temp = dictSteps[i];
+                    cellsInPrevSteps=allCellsInPrevStep.concat(temp);
+                    allCellsInPrevStep=cellsInPrevSteps;
+                }
+            console.log("Cells in prev step" + cellsInPrevSteps);
+
+            //var x = stepsOption.options[window.steps-1].value.split(',');
+
+			if(window.steps - 1 < stepsOption.options.length) {
+				var n =
+					stepsOption.options[window.steps - 1].value.indexOf("animationtype-");
+				var n1 =
+					stepsOption.options[window.steps - 1].value.indexOf("opacity-");
+				var n2 =
+					stepsOption.options[window.steps - 1].value.indexOf("celldet-");
+				var n3 =
+					stepsOption.options[window.steps - 1].value.indexOf("opacityothers-");
+				var n4 = stepsOption.options[window.steps - 1].value.indexOf("img-");
+				n1Len = "animationtype-".length;
+				n2Len = "opacity-".length;
+				n3Len = "celldet-".length;
+				n4Len = "opacityothers-".length;
+
+				var x = [];
+				animType = stepsOption.options[window.steps - 1].value.substring(
+					n + n1Len,
+					n1
+				);
+				x.push(animType);
+				opacityVal = stepsOption.options[window.steps - 1].value.substring(
+					n1 + n2Len,
+					n2
+				);
+				x.push(opacityVal);
+				cellDet = stepsOption.options[window.steps - 1].value.substring(
+					n2 + n3Len,
+					n3
+				);
+				x.push(cellDet);
+				opacityRestVal = stepsOption.options[window.steps - 1].value.substring(
+					n3 + n4Len,
+					n4
+				);
+				x.push(opacityRestVal);
+				console.log("StepDetails array: ", x);
+
+				var prevStepsOpacity = x[3];
+
+				console.log("Previous Step Opacity: " + x[3]);
+				console.log("Current Step Opacity: " + x[1]);
+
+				if (cellsInPrevSteps != null || cellsInPrevSteps != "undefined") {
+					for (i = 0; i < cellsInPrevSteps.length; i++) {
+						console.log("Previous Step Id " + cellsInPrevSteps[i]);
+						var cell = mapping[cellsInPrevSteps[i]];
+						if (cell != null) {
+							if (tempgraph.getModel().isVertex(cell) && cell.value != null) {
+								console.log("Vertex with value");
+								tempgraph.setCellStyles("opacity", x[3], [cell]);
+								//tempgraph.setCellStyles('noLabel', 1 , [cell]);
+								if (stepDetails[3] == 0) {
+									tempgraph.setCellStyles("noLabel", 1, [cell]);
+								} else {
+									tempgraph.setCellStyles(
+										mxConstants.STYLE_TEXT_OPACITY,
+										x[3],
+										[cell]
+									);
+								}
+							} else if (
+								tempgraph.getModel().isVertex(cell) &&
+								(cell.value == null || cell.value == "")
+							) {
+								console.log("Vertex with no value");
+								tempgraph.setCellStyles("opacity", x[3], [cell]);
+								tempgraph.setCellStyles("noLabel", null, [cell]);
+								tempgraph.setCellStyles(mxConstants.STYLE_TEXT_OPACITY, x[3], [
+									cell,
+								]);
+							} else if (tempgraph.getModel().isEdge(cell)) {
+								console.log("Edge ");
+								tempgraph.setCellStyles("opacity", x[3], [cell]);
+								/*tempgraph.setCellStyles('noLabel', null, [cell]);
+                            tempgraph.setCellStyles(mxConstants.STYLE_TEXT_OPACITY, stepDetails[3] , [cell]);*/
+								if (cell.value != null) {
+									if (x[3] == 0) {
+										tempgraph.setCellStyles("noLabel", 1, [cell]);
+									} else {
+										tempgraph.setCellStyles(
+											mxConstants.STYLE_TEXT_OPACITY,
+											x[3],
+											[cell]
+										);
+									}
+								} else {
+									var descendants = editorUi.editor.graph
+										.getModel()
+										.getDescendants(cell);
+									for (var j = 0; j < descendants.length; j++) {
+										if (
+											descendants.length > 0 &&
+											descendants[j].parent.id == cell.id
+										) {
+											if (descendants[j].value) {
+												console.log("Edge desc");
+												tempgraph.setCellStyles("opacity", x[3], [
+													descendants[j],
+												]);
+												//tempgraph.setCellStyles('noLabel', 1, [descendants[j]]);
+												if (stepDetails[3] == 0) {
+													tempgraph.setCellStyles("noLabel", 1, [
+														descendants[j],
+													]);
+												} else {
+													tempgraph.setCellStyles(
+														mxConstants.STYLE_TEXT_OPACITY,
+														x[3],
+														[descendants[j]]
+													);
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+
+				var cellsInThisSteps = dictSteps[window.steps - 1];
+				console.log("Cells in this step" + cellsInThisSteps);
+
+				if (cellsInThisSteps != null || cellsInThisSteps != "undefined") {
+					for (i = 0; i < cellsInThisSteps.length; i++) {
+						//var cell = tempgraph.getModel().cells[id];
+						console.log("Current Step Id " + cellsInThisSteps[i]);
+						var cell = mapping[cellsInThisSteps[i]];
+
+						if (cell != null) {
+							console.log(
+								"Cell id: " +
+									cell.id +
+									" Cell Edge: " +
+									cell.edge +
+									" Cell Vertex: " +
+									cell.vertex
+							);
+							console.log("Cell edge : " + cell.isEdge());
+
+							if (stepDetails[0] == "Show") {
+								tempgraph.setCellStyles("opacity", x[1], [cell]);
+								tempgraph.setCellStyles("noLabel", null, [cell]);
+								tempgraph.setCellStyles(mxConstants.STYLE_TEXT_OPACITY, x[1], [
+									cell,
+								]);
+								/*if(cell.edge)
+                                {
+                                    console.log("is edge");
+                                    var descendants=editorUi.editor.graph.getModel().getDescendants(cell);
+                                    for (var j = 0; j < descendants.length; j++)
+                                    {  
+                                            console.log("Descendants of Cell: "+cell.id + " Descendant Parent Id: "+descendants[j].parent.id + " Desc Value: "+descendants[j].value);
+                                            if(descendants.length > 0 && descendants[j].parent.id==cell.id)
+                                            {
+                                                    if(descendants[j].value)
+                                                    {
+                                                            tempgraph.setCellStyles('opacity', stepDetails[1], [descendants[j]]);
+                                                            tempgraph.setCellStyles('noLabel', null, [descendants[j]]);
+                                                    } 
+                                            }                                         
+                                    }
+                                }
+                                else
+                                {
+                                    console.log("is not edge")
+                                }*/
+							} else if (stepDetails[0] == "Wipe In") {
+								tempgraph.setCellStyles("opacity", x[1], [cell]);
+								tempgraph.setCellStyles("noLabel", null, [cell]);
+								tempgraph.setCellStyles(mxConstants.STYLE_TEXT_OPACITY, x[1], [
+									cell,
+								]);
+								animateCells(tempgraph, [cell]);
+
+								/*if(cell.edge)
+                            {
+                                    console.log("is edge");
+                                    var descendants=editorUi.editor.graph.getModel().getDescendants(cell);
+                                    for (var j = 0; j < descendants.length; j++)
+                                    {  
+                                            console.log("Descendants of Cell: "+cell.id + " Descendant Parent Id: "+descendants[j].parent.id + " Desc Value: "+descendants[j].value);
+                                            if(descendants.length > 0 && descendants[j].parent.id==cell.id)
+                                            {
+                                                    if(descendants[j].value)
+                                                    {
+                                                            console.log(descendants[j].id);
+                                                            edgeTextNode = mapping[descendants[j].id];
+                                                            tempgraph.setCellStyles('opacity', stepDetails[1], [edgeTextNode]);
+                                                            tempgraph.setCellStyles('noLabel',null, [edgeTextNode]);
+                                                            animateCells(tempgraph, [edgeTextNode]);
+                                                    } 
+                                            }                                         
+                                    }
+                            }
+                            else
+                            {
+                                    console.log("is not edge")
+                            }*/
+							} else if (stepDetails[0] == "Fade In") {
+								tempgraph.setCellStyles("opacity", x[1], [cell]);
+								tempgraph.setCellStyles("noLabel", null, [cell]);
+								tempgraph.setCellStyles(mxConstants.STYLE_TEXT_OPACITY, x[1], [
+									cell,
+								]);
+								fadeIn(getNodesForCells(tempgraph, [cell]));
+								/*if(cell.edge)
+                            {
+                                console.log("is edge");
+                                var descendants=editorUi.editor.graph.getModel().getDescendants(cell);
+                                for (var j = 0; j < descendants.length; j++)
+                                {  
+                                        console.log("Descendants of Cell: "+cell.id + " Descendant Parent Id: "+descendants[j].parent.id + " Desc Value: "+descendants[j].value);
+                                        if(descendants.length > 0 && descendants[j].parent.id==cell.id)
+                                        {
+                                                if(descendants[j].value)
+                                                {
+                                                        console.log(descendants[j].id);
+                                                        edgeTextNode = mapping[descendants[j].id];
+                                                        tempgraph.setCellStyles('opacity', stepDetails[1], [edgeTextNode]);
+                                                        tempgraph.setCellStyles('noLabel', null, [edgeTextNode]);
+                                                        fadeIn(tempgraph, [edgeTextNode]);
+                                                } 
+                                        }                                         
+                                }
+                            }
+                            else
+                            {
+                                    console.log("is not edge")
+                            }*/
+							} else if (stepDetails[0] == "Fade Out") {
+								tempgraph.setCellStyles("opacity", x[1], [cell]);
+								tempgraph.setCellStyles("noLabel", null, [cell]);
+								tempgraph.setCellStyles(mxConstants.STYLE_TEXT_OPACITY, x[1], [
+									cell,
+								]);
+								fadeOut(getNodesForCells(tempgraph, [cell]));
+
+								/*if(cell.edge)
+                            {
+                                    console.log("is edge");
+                                    var descendants=editorUi.editor.graph.getModel().getDescendants(cell);
+                                    for (var j = 0; j < descendants.length; j++)
+                                    {  
+                                            console.log("Descendants of Cell: "+cell.id + " Descendant Parent Id: "+descendants[j].parent.id + " Desc Value: "+descendants[j].value);
+                                            if(descendants.length > 0 && descendants[j].parent.id==cell.id)
+                                            {
+                                                    if(descendants[j].value)
+                                                    {
+                                                            console.log(descendants[j].id);
+                                                            edgeTextNode = mapping[descendants[j].id];
+                                                            tempgraph.setCellStyles('opacity', stepDetails[1], [edgeTextNode]);
+                                                            tempgraph.setCellStyles('noLabel', null, [edgeTextNode]);
+                                                            fadeOut(tempgraph, [edgeTextNode]);
+                                                    } 
+                                            }                                         
+                                    }
+                            }
+                            else
+                            {
+                                    console.log("is not edge")
+                            }*/
+							}
+						} else {
+							alert("Something went wrong!");
+						}
+					}
+				}
+			}
+        });
+    }); 
+        
+    td31.appendChild(testapplyBtn);
+
+    tr1.appendChild(td12);
+    tbody.appendChild(tr1);
+    tr3.appendChild(td31);
+    
+    tbody.appendChild(tr3);
+    
+    // PUT BUTTONS ON LEFT SIDEBAR
+    // ON TOP
+    var actionButtons = document.createElement('tr');
+    
+    var addRemoveUpDownStepsButton = document.createElement('td');
+    addRemoveUpDownStepsButton.appendChild(addTempStepBtn);
+    addRemoveUpDownStepsButton.appendChild(removeBtn);
+    
+    addRemoveUpDownStepsButton.appendChild(upBtn);
+    addRemoveUpDownStepsButton.appendChild(downBtn);
+    
+    actionButtons.appendChild(addRemoveUpDownStepsButton);
+    
+    // IN MIDDLE
+    var stepsInMid = document.createElement('tr');
+    var stepsScollbarInMid = document.createElement('td');
+    
+    // Edit presentation slide text button
+    var editOptionTextBtn = mxUtils.button('Edit', function(){
+        var select = document.getElementById("stepsSelect");
+        var selectedOptionIndex = select.selectedIndex;
+        select.options[selectedOptionIndex].id = selectedOptionIndex;
+                
+        if(!select.options[selectedOptionIndex].innerHTML.startsWith('<input'))
+            select.options[selectedOptionIndex].innerHTML = "<input type = 'text' id = 'renameField" + selectedOptionIndex + "' value = '" + select.options[selectedOptionIndex].innerHTML + "' />"
+        
+        document.getElementById('renameField'+selectedOptionIndex).focus();
+        document.getElementById('renameField'+selectedOptionIndex).select();
+        
+        select.options.onfocusout = function(){
+            select.options[select.selectedIndex].innerHTML = document.getElementById('renameField'+selectedOptionIndex).value;
+        };
+    });
+    
+    editOptionTextBtn.innerHTML = "&#x270E;";
+    editOptionTextBtn.title = "Edit Slide Name"
+    editOptionTextBtn.style.padding = "0px 46px 2px 43px";
+    editOptionTextBtn.style.marginTop = "5px";
+    stepsScollbarInMid.style.width = "53%";
+    stepsScollbarInMid.appendChild(editOptionTextBtn);
+    
+    stepsScollbarInMid.appendChild(stepsOption);
+    
+    var selectedCellInMid = document.createElement('td');
+    selectedCellInMid.style.position = 'absolute';
+    selectedCellInMid.style.width = '93px';
+    selectedCellInMid.style.height = '45%';
+    selectedCellInMid.style.marginTop = '15px';
+    selectedCellInMid.appendChild(container);
+    
+    var clearAdvanceStartButtonsTd = document.createElement('td');
+    clearBtn.style.padding = "0px 28px 0px 28px";
+    clearBtn.style.marginBottom = "2px";
+    clearAdvanceStartButtonsTd.appendChild(clearBtn);
+    
+    advanceBtn.style.padding = "0px 22px 0px 19px";
+    advanceBtn.style.marginBottom = "2px";
+    clearAdvanceStartButtonsTd.appendChild(advanceBtn);
+    
+    testapplyBtn.style.padding = "0px 31px 1px 30px";
+    testapplyBtn.style.marginTop = '2x';
+    clearAdvanceStartButtonsTd.appendChild(testapplyBtn);
+    
+    selectedCellInMid.appendChild(clearAdvanceStartButtonsTd);
+    
+    stepsInMid.appendChild(stepsScollbarInMid);
+    stepsInMid.appendChild(selectedCellInMid);
+    
+    //ON BOTTOM
+    var buttonsAlignedOnBottom = document.createElement('tr');
+    buttonsAlignedOnBottom.appendChild(addRemoveUpDownStepsButton);
+    table.appendChild(buttonsAlignedOnBottom);
+    table.appendChild(tbody);
+    
+    // Add buttons on left Sidebar as well
+    var presentationSidebarAnchorTag = document.createElement('a');
+    presentationSidebarAnchorTag.id = "getPresentation";
+    presentationSidebarAnchorTag.innerHTML = "Presentation";
+    presentationSidebarAnchorTag.style.backgroundImage = 'url(\'' + 'data:image/gif;base64,R0lGODlhDQANAIABAJmZmf///yH/C1hNUCBEYXRhWE1QPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS4wLWMwNjAgNjEuMTM0Nzc3LCAyMDEwLzAyLzEyLTE3OjMyOjAwICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIiB4bWxuczpzdFJlZj0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL3NUeXBlL1Jlc291cmNlUmVmIyIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IE1hY2ludG9zaCIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDoxREY3NzBERjZGNUYxMUU1QjZEOThCNDYxMDQ2MzNCQiIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDoxREY3NzBFMDZGNUYxMUU1QjZEOThCNDYxMDQ2MzNCQiI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjFERjc3MERENkY1RjExRTVCNkQ5OEI0NjEwNDYzM0JCIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjFERjc3MERFNkY1RjExRTVCNkQ5OEI0NjEwNDYzM0JCIi8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+Af/+/fz7+vn49/b19PPy8fDv7u3s6+rp6Ofm5eTj4uHg397d3Nva2djX1tXU09LR0M/OzczLysnIx8bFxMPCwcC/vr28u7q5uLe2tbSzsrGwr66trKuqqainpqWko6KhoJ+enZybmpmYl5aVlJOSkZCPjo2Mi4qJiIeGhYSDgoGAf359fHt6eXh3dnV0c3JxcG9ubWxramloZ2ZlZGNiYWBfXl1cW1pZWFdWVVRTUlFQT05NTEtKSUhHRkVEQ0JBQD8+PTw7Ojk4NzY1NDMyMTAvLi0sKyopKCcmJSQjIiEgHx4dHBsaGRgXFhUUExIREA8ODQwLCgkIBwYFBAMCAQAAIfkEAQAAAQAsAAAAAA0ADQAAAhGMj6nL3QAjVHIu6azbvPtWAAA7' + '\')';
+    presentationSidebarAnchorTag.style.backgroundRepeat = "no-repeat";
+    presentationSidebarAnchorTag.style.backgroundPosition = "4px 55%";
+    presentationSidebarAnchorTag.style.height = "100%";
+    // presentationSidebarAnchorTag.style.backgroundColor = "#eeeeee";
+    presentationSidebarAnchorTag.style.fontSize = "13px";
+    presentationSidebarAnchorTag.style.fontWeight = "500";
+    // presentationSidebarAnchorTag.style.paddingRight = "128px";
+    presentationSidebarAnchorTag.style.paddingBottom = "8px";
+    presentationSidebarAnchorTag.style.paddingTop = "8px";
+    presentationSidebarAnchorTag.style.paddingLeft = "20px";
+    presentationSidebarAnchorTag.style.borderTop = "1px solid #e5e5e5";
+    presentationSidebarAnchorTag.style.borderBottom = "1px solid #e5e5e5";
+    presentationSidebarAnchorTag.style.height = "1em";
+    presentationSidebarAnchorTag.style.display = "block";
+    
+    var presentationSidebar = document.createElement('div');
+    presentationSidebar.id = "presentationSidebar";
+    presentationSidebar.style.background = "whitesmoke";
+    presentationSidebar.appendChild(actionButtons);
+    presentationSidebar.appendChild(stepsInMid);
+    presentationSidebar.appendChild(buttonsAlignedOnBottom);
+    
+    document.getElementsByClassName("geSidebarContainer")[0].append(presentationSidebarAnchorTag);
+    document.getElementsByClassName("geSidebarContainer")[0].append(presentationSidebar);
+    
+    mxEvent.addListener(presentationSidebarAnchorTag, 'click', function(){
+        if(document.getElementById("presentationSidebar").style.visibility === "hidden"){
+            document.getElementById("presentationSidebar").style.visibility = "visible";
+            document.getElementById("getPresentation").style.backgroundImage = 'url(\'' + 'data:image/gif;base64,R0lGODlhDQANAIABAJmZmf///yH/C1hNUCBEYXRhWE1QPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS4wLWMwNjAgNjEuMTM0Nzc3LCAyMDEwLzAyLzEyLTE3OjMyOjAwICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIiB4bWxuczpzdFJlZj0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL3NUeXBlL1Jlc291cmNlUmVmIyIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IE1hY2ludG9zaCIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDoxREY3NzBERjZGNUYxMUU1QjZEOThCNDYxMDQ2MzNCQiIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDoxREY3NzBFMDZGNUYxMUU1QjZEOThCNDYxMDQ2MzNCQiI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjFERjc3MERENkY1RjExRTVCNkQ5OEI0NjEwNDYzM0JCIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjFERjc3MERFNkY1RjExRTVCNkQ5OEI0NjEwNDYzM0JCIi8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+Af/+/fz7+vn49/b19PPy8fDv7u3s6+rp6Ofm5eTj4uHg397d3Nva2djX1tXU09LR0M/OzczLysnIx8bFxMPCwcC/vr28u7q5uLe2tbSzsrGwr66trKuqqainpqWko6KhoJ+enZybmpmYl5aVlJOSkZCPjo2Mi4qJiIeGhYSDgoGAf359fHt6eXh3dnV0c3JxcG9ubWxramloZ2ZlZGNiYWBfXl1cW1pZWFdWVVRTUlFQT05NTEtKSUhHRkVEQ0JBQD8+PTw7Ojk4NzY1NDMyMTAvLi0sKyopKCcmJSQjIiEgHx4dHBsaGRgXFhUUExIREA8ODQwLCgkIBwYFBAMCAQAAIfkEAQAAAQAsAAAAAA0ADQAAAhGMj6nL3QAjVHIu6azbvPtWAAA7' + '\')';
+        }else {
+            document.getElementById("presentationSidebar").style.visibility = "hidden";
+            document.getElementById("getPresentation").style.backgroundImage = 'url(\'' + 'data:image/gif;base64,R0lGODlhDQANAIABAJmZmf///yH/C1hNUCBEYXRhWE1QPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS4wLWMwNjAgNjEuMTM0Nzc3LCAyMDEwLzAyLzEyLTE3OjMyOjAwICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIiB4bWxuczpzdFJlZj0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL3NUeXBlL1Jlc291cmNlUmVmIyIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IE1hY2ludG9zaCIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDozNUQyRTJFNjZGNUYxMUU1QjZEOThCNDYxMDQ2MzNCQiIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDozNUQyRTJFNzZGNUYxMUU1QjZEOThCNDYxMDQ2MzNCQiI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjFERjc3MEUxNkY1RjExRTVCNkQ5OEI0NjEwNDYzM0JCIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjFERjc3MEUyNkY1RjExRTVCNkQ5OEI0NjEwNDYzM0JCIi8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+Af/+/fz7+vn49/b19PPy8fDv7u3s6+rp6Ofm5eTj4uHg397d3Nva2djX1tXU09LR0M/OzczLysnIx8bFxMPCwcC/vr28u7q5uLe2tbSzsrGwr66trKuqqainpqWko6KhoJ+enZybmpmYl5aVlJOSkZCPjo2Mi4qJiIeGhYSDgoGAf359fHt6eXh3dnV0c3JxcG9ubWxramloZ2ZlZGNiYWBfXl1cW1pZWFdWVVRTUlFQT05NTEtKSUhHRkVEQ0JBQD8+PTw7Ojk4NzY1NDMyMTAvLi0sKyopKCcmJSQjIiEgHx4dHBsaGRgXFhUUExIREA8ODQwLCgkIBwYFBAMCAQAAIfkEAQAAAQAsAAAAAA0ADQAAAhSMj6lrwAjcC1GyahV+dcZJgeIIFgA7' + '\')';
+        }
+    })
+
+	this.advanceSettingWindow = undefined;
+	var animationWindowContext = this
+    
+    mxEvent.addListener(advanceBtn, 'click', function() {
+        if (animationWindowContext.advanceSettingWindow === undefined){
+            animationWindowContext.advanceSettingWindow =
+							new AdvanceSettingWindow(table);
+        } else {
+        animationWindowContext.advanceSettingWindow.window.setVisible(
+					!animationWindowContext.advanceSettingWindow.window.isVisible()
+				);
+		}
+    })
+
+	this.hideAnimationWindow = function () {
+		document.getElementById("presentationSidebar").style.visibility = "hidden";
+		document.getElementById("getPresentation").style.visibility = "hidden";
+		if (
+			this.advanceSettingWindow &&
+			this.advanceSettingWindow.window.isVisible()
+		)
+			this.advanceSettingWindow.window.setVisible(
+				!this.advanceSettingWindow.window.isVisible()
+			);
+	}
+};
+        
+var AdvanceSettingWindow = function(table) {
+    this.window = new mxWindow('Advance Settings', table, (document.body.offsetWidth - 380) / 2, 120, 340, 230, true, true);
+    this.window.setVisible(true);
+    this.window.setResizable(true);
+    this.window.setClosable(true);
+    this.window.destroyOnClose = false;
+};                  
+        
+      
+        
+// For animation and fading
+function getNodesForCells(graph, cells) {             
+    var nodes = [];
+    for (var i = 0; i < cells.length; i++) {
+        var state = graph.view.getState(cells[i]);
+        if (state != null) {
+           // alert('in getNodes');
+            var shapes = graph.cellRenderer.getShapesForState(state);
+            for (var j = 0; j < shapes.length; j++){
+                if (shapes[j] != null && shapes[j].node != null){
+                    nodes.push(shapes[j].node);
+                }
+            }
+            // Adds folding icon
+            if (state.control != null && state.control.node != null){
+                nodes.push(state.control.node);
+            }
+        }
+    }
+    return nodes;
+};
+
+	
+function fadeIn(nodes){
+    if (nodes != null){
+       // alert('Executing fadein');
+        for (var i = 0; i < nodes.length; i++){
+            mxUtils.setPrefixedStyle(nodes[i].style, 'transition', null);
+            nodes[i].style.opacity = '0';
+        }
+
+        window.setTimeout(function(){
+            for(var i = 0; i < nodes.length; i++){
+                mxUtils.setPrefixedStyle(nodes[i].style, 'transition', 'all 1s ease-in-out');
+                nodes[i].style.opacity = '1';
+            }
+        }, 0);
+    }
+};
+
+function fadeOut(nodes){
+    if (nodes != null){
+        for (var i = 0; i < nodes.length; i++){
+            mxUtils.setPrefixedStyle(nodes[i].style, 'transition', null);
+            nodes[i].style.opacity = '1';
+        }
+        window.setTimeout(function(){
+            for (var i = 0; i < nodes.length; i++){
+                    mxUtils.setPrefixedStyle(nodes[i].style, 'transition', 'all 1s ease-in-out');
+                    nodes[i].style.opacity = '0';
+            }
+        }, 0);
+    }
+};
+	
+function createEdgeAnimation(state)
+{
+	var pts = state.absolutePoints.slice();
+	var segs = state.segments;
+	var total = state.length;
+	var n = pts.length;
+
+	return {
+		execute: function(step, steps)
+		{
+			if (state.shape != null)
+			{
+				var pts2 = [pts[0]];
+				var dist = total * step / steps;
+				
+				for (var i = 1; i < n; i++)
+				{
+					if (dist <= segs[i - 1])
+					{
+						pts2.push(new mxPoint(pts[i - 1].x + (pts[i].x - pts[i - 1].x) * dist / segs[i - 1],
+							pts[i - 1].y + (pts[i].y - pts[i - 1].y) * dist / segs[i - 1]));
+						
+						break;
+					}
+					else
+					{
+						dist -= segs[i - 1];
+						pts2.push(pts[i]);
+					}
+				}
+				
+				state.shape.points = pts2;
+				state.shape.redraw();
+			}
+		},
+		stop: function()
+		{
+			if (state.shape != null)
+			{
+				state.shape.points = pts;
+				state.shape.redraw();
+			}
+		}
+	};
+};
+
+function createVertexAnimation(state)
+{
+	var bds = new mxRectangle.fromRectangle(state.shape.bounds);
+	var ttr = null;
+	
+	if (state.text != null && state.text.node != null && state.text.node.firstChild != null)
+	{
+		ttr = state.text.node.firstChild.getAttribute('transform');
+	}
+	
+	return {
+		execute: function(step, steps)
+		{
+			if (state.shape != null)
+			{
+				var f = step / steps;
+				state.shape.bounds = new mxRectangle(bds.x, bds.y, bds.width * f, bds.height);
+				state.shape.redraw();
+				
+				// Text is animated using CSS3 transitions
+				if (ttr != null)
+				{
+					state.text.node.firstChild.setAttribute('transform', ttr + ' scale(' + f + ',1)');
+				}
+			}
+		},
+		stop: function()
+		{
+			if (state.shape != null)
+			{
+				state.shape.bounds = bds;
+				state.shape.redraw();
+				
+				if (ttr != null)
+				{
+					state.text.node.firstChild.setAttribute('transform', ttr);
+				}
+			}
+		}
+	};
+};
+
+function animateCells(graph, cells, steps, delay)
+{
+	steps = (steps != null) ? steps : 30;
+	delay = (delay != null) ? delay : 30;
+	
+	var animations = [];
+	
+	for (var i = 0; i < cells.length; i++)
+	{
+		var state = graph.view.getState(cells[i]);
+
+		if (state != null && state.shape != null && graph.model.isEdge(state.cell) &&
+			state.absolutePoints != null && state.absolutePoints.length > 1)
+		{
+			animations.push(createEdgeAnimation(state));
+		}
+		else if (state != null && graph.model.isVertex(state.cell) &&
+				state.shape != null && state.shape.bounds != null)
+		{
+			animations.push(createVertexAnimation(state));
+			// TODO: include descendants
+		}
+	}
+	
+	var step = 0;
+	
+	function animate()
+	{
+		if (step == steps)
+		{
+			window.clearInterval(thread);
+			
+			for (var i = 0; i < animations.length; i++)
+			{
+				animations[i].stop();
+			}
+		}
+		else
+		{
+			for (var i = 0; i < animations.length; i++)
+			{
+				animations[i].execute(step, steps);
+			}
+			
+			step++;							
+		}
+	}
+	
+	var thread = window.setInterval(animate, delay);
+	animate();
+};
+
+function mapCell(cell, clone, mapping)
+{
+	
+	mapping = (mapping != null) ? mapping : new Object();
+	mapping[cell.id] = clone;
+	console.log("In mapping: "+ mapping[cell.id].id);
+	
+	var childCount = cell.getChildCount();
+	
+	for (var i = 0; i < childCount; i++)
+	{
+		mapCell(cell.getChildAt(i), clone.getChildAt(i), mapping);
+	}
+	
+	return mapping;
+};
+
+var allowedToRun = false;
+var running = false;
+	var loop=true;
+
+function stop()
+{
+	allowedToRun = false;
+};
+
+function run(editorUi,graph, steps, loop)
+{
+		/*
+		// alert(steps);
+		// alert(loop);
+		if(loop)
+		{
+		//  alert('Loop works');
+		}
+		
+		
+			for (var id in graph.getModel().cells)
+			{
+				var cell = graph.getModel().cells[id];
+				
+				if (graph.getModel().isVertex(cell) || graph.getModel().isEdge(cell))
+				{
+											// alert('In cell'+ id);
+					graph.setCellStyles('opacity', '0', [cell]);
+					graph.setCellStyles('noLabel', '1', [cell]);
+				}
+			}
+						//alert(editorUi.editor.graph.getModel().getRoot());
+						//alert(graph.getModel().getRoot());
+						var mapping = mapCell(editorUi.editor.graph.getModel().getRoot(), graph.getModel().getRoot());
+						//alert(mapping);
+						var step = 0;
+						allowedToRun=true;
+						// alert(steps.length);
+						if (allowedToRun && step < steps.length)
+			{
+								// alert('Inside if')
+								
+				var tokens = steps[step].split(' ');
+				
+				if (tokens.length > 0)
+				{
+					if (tokens[0] == 'wait' && tokens.length > 1)
+					{
+						window.setTimeout(function()
+						{
+							step++;
+							next();
+						}, parseFloat(tokens[1]));
+					}
+					else
+					{
+						if (tokens.length > 1)
+						{
+							var cell = mapping[tokens[1]];
+							
+							if (cell != null)
+							{
+																// alert('Inside cell')
+								if (tokens[0] == 'show')
+								{
+									graph.setCellStyles('opacity', '100', [cell]);
+									graph.setCellStyles('noLabel', null, [cell]);
+									
+									if (tokens.length > 2 && tokens[2] == 'fade')
+									{
+																				//  alert('Inside fade')
+										fadeIn(getNodesForCells(graph, [cell]));
+									}
+									else
+									{
+										animateCells(graph, [cell]);
+									}
+								}
+								else if (tokens[0] == 'hide')
+								{
+									fadeOut(getNodesForCells(graph, [cell]));
+								}
+							}
+							else
+							{
+								console.log('cell not found', id, steps[step]);
+							}
+						}
+						
+						
+					}
+				}
+			}*/
+							
+		
+		
+	if (!running)
+	{
+		allowedToRun = true;
+		running = true;
+
+		graph.getModel().beginUpdate();
+		try
+		{
+			for (var id in graph.getModel().cells)
+			{
+				var cell = graph.getModel().cells[id];
+				
+				if (graph.getModel().isVertex(cell) || graph.getModel().isEdge(cell))
+				{
+					graph.setCellStyles('opacity', '0', [cell]);
+					graph.setCellStyles('noLabel', '1', [cell]);
+				}
+			}
+		}
+		finally
+		{
+			graph.getModel().endUpdate();
+		}
+		
+		var mapping = mapCell(editorUi.editor.graph.getModel().getRoot(), graph.getModel().getRoot());
+		var step = 0;
+		window.RunPage=0;
+		function next()
+		{
+			if (allowedToRun && step < steps.length)
+			{
+				var tokens = steps[step].split(' ');
+				
+				if (tokens.length > 0)
+				{
+					if (tokens[0] == 'wait' && tokens.length > 1)
+					{
+						window.setTimeout(function()
+						{
+							step++;
+							next();
+						}, parseFloat(tokens[1]));
+					}/*
+											else if(tokens[0] == 'NextPage')
+											{
+												graph.getModel().setRoot(editorUi.pages[window.RunPage].root);
+												window.RunPage++;
+												next();
+											}*/
+					else
+					{
+						if (tokens.length > 1)
+						{
+							var cell = mapping[tokens[1]];
+							
+							if (cell != null)
+							{
+								if (tokens[0] == 'show')
+								{
+									graph.setCellStyles('opacity', '100', [cell]);
+									graph.setCellStyles('noLabel', null, [cell]);
+									
+									if (tokens.length > 2 && tokens[2] == 'fade')
+									{
+										fadeIn(getNodesForCells(graph, [cell]));
+									}
+									else
+									{
+										animateCells(graph, [cell]);
+									}
+								}
+								else if (tokens[0] == 'hide')
+								{
+									fadeOut(getNodesForCells(graph, [cell]));
+								}
+							}
+							else
+							{
+								console.log('cell not found', id, steps[step]);
+							}
+						}
+						
+						step++;
+													
+						next();
+					}
+				}
+			}
+			else
+			{
+				running = false;
+				
+				if (loop)
+				{
+					// Workaround for edge animation
+					graph.refresh();
+					run(graph, steps, loop);
+				}
+			}
+		};
+					
+		next();
+	}
+};

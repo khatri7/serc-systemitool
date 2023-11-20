@@ -1,7 +1,7 @@
 # *DO NOT DIRECTLY EDIT THIS FILE, IT IS AUTOMATICALLY GENERATED AND IT IS BASED ON:*
 # https://docs.google.com/spreadsheet/ccc?key=0AmQEO36liL4FdDJLWVNMaVV2UmRKSnpXU09MYkdGbEE
 about=About
-aboutDrawio=About draw.io
+aboutDrawio=About SystemiTool
 accessDenied=Access Denied
 accounts=Accounts
 action=Action
@@ -285,7 +285,7 @@ exportAs=Export as
 exportOptionsDisabled=Export options disabled
 exportOptionsDisabledDetails=The owner has disabled options to download, print or copy for commenters and viewers on this file.
 externalChanges=External Changes
-extras=Extras
+extras=Presentation
 facebook=Facebook
 failedToSaveTryReconnect=Failed to save, trying to reconnect
 featureRequest=Feature Request
@@ -599,7 +599,7 @@ pickLibraryDialogTitle=Select Library
 publicDiagramUrl=Public URL of the diagram
 placeholders=Placeholders
 plantUml=PlantUML
-plugins=Plugins
+plugins=Create Slideshow
 pluginUrl=Plugin URL
 pluginWarning=The page has requested to load the following plugin(s):\n \n {1}\n \n Would you like to load these plugin(s) now?\n \n NOTE : Only allow plugins to run if you fully understand the security implications of doing so.\n
 plusTooltip=Click to connect and clone (ctrl+click to clone, shift+click to connect). Drag to connect (ctrl+drag to clone).

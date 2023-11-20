@@ -4691,6 +4691,17 @@
 
    	    this.saveData(filename, ext, data.substring(data.lastIndexOf(',') + 1), 'image/' + format, true);
 	};
+
+	EditorUi.prototype.getDataForPreview = function (canvas, xml, format) {
+		var ext = format == "jpeg" ? "jpg" : format;
+		var filename = this.getBaseFilename() + "." + ext;
+		var data = this.createImageDataUri(canvas, xml, format);
+		console.log("Data in save canvas1: ", data);
+		console.log("xml in save canvas1: ", xml);
+		console.log("Canvas in save canvas1: ", canvas);
+		return data;
+		//this.saveData(filename, ext, data.substring(data.lastIndexOf(',') + 1), 'image/' + format, true);
+	};
 	
 	/**
 	 * Returns true if files should be saved using <saveLocalFile>.
