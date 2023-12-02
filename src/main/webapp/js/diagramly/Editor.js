@@ -3916,7 +3916,8 @@
 	 */
 	if (window.ColorDialog)
 	{
-		FilenameDialog.filenameHelpLink = 'https://www.drawio.com/doc/faq/save-file-formats'; 
+		// FilenameDialog.filenameHelpLink = 'https://www.drawio.com/doc/faq/save-file-formats'; 
+		FilenameDialog.filenameHelpLink = null; 
 		
 		var colorDialogAddRecentColor = ColorDialog.addRecentColor;
 		
