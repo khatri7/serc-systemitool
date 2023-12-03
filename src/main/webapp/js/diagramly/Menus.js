@@ -2931,18 +2931,19 @@
 				this.addMenuItems(menu, ['exportPdf'], parent);
 			}
 
-			if (!mxClient.IS_IE && (typeof(VsdxExport) !== 'undefined' || !editorUi.isOffline()))
-			{
-				this.addMenuItems(menu, ['exportVsdx'], parent);
-			}
+			// if (!mxClient.IS_IE && (typeof(VsdxExport) !== 'undefined' || !editorUi.isOffline()))
+			// {
+			// 	this.addMenuItems(menu, ['exportVsdx'], parent);
+			// }
 
-			this.addMenuItems(menu, ['-', 'exportHtml', 'exportXml', 'exportUrl'], parent);
+			// this.addMenuItems(menu, ['-', 'exportHtml', 'exportXml', 'exportUrl'], parent);
+			this.addMenuItems(menu, ['-', 'exportUrl'], parent);
 
-			if (!editorUi.isOffline())
-			{
-				menu.addSeparator(parent);
-				this.addMenuItem(menu, 'export', parent).firstChild.nextSibling.innerHTML = mxResources.get('advanced') + '...';
-			}
+			// if (!editorUi.isOffline())
+			// {
+			// 	menu.addSeparator(parent);
+			// 	this.addMenuItem(menu, 'export', parent).firstChild.nextSibling.innerHTML = mxResources.get('advanced') + '...';
+			// }
 
 			if (!mxClient.IS_CHROMEAPP && !EditorUi.isElectronApp && Editor.currentTheme == 'min')
 			{
@@ -5284,17 +5285,17 @@
 					
 					this.addMenuItems(menu, ['-', 'save', 'saveAs', '-'], parent);
 					
-					if (!mxClient.IS_CHROMEAPP && !EditorUi.isElectronApp &&
-						editorUi.getServiceName() == 'draw.io' &&
-						!editorUi.isOfflineApp() && file != null)
-					{
-						this.addMenuItems(menu, ['share', '-'], parent);
-					}
+					// if (!mxClient.IS_CHROMEAPP && !EditorUi.isElectronApp &&
+					// 	editorUi.getServiceName() == 'draw.io' &&
+					// 	!editorUi.isOfflineApp() && file != null)
+					// {
+					// 	this.addMenuItems(menu, ['share', '-'], parent);
+					// }
 					
-					if (file != null && file.isRenamable())
-					{
-						this.addMenuItems(menu, ['rename'], parent);
-					}
+					// if (file != null && file.isRenamable())
+					// {
+					// 	this.addMenuItems(menu, ['rename'], parent);
+					// }
 					
 					// if (editorUi.isOfflineApp())
 					// {
@@ -5322,8 +5323,8 @@
 					// }
 				}
 				
-				menu.addSeparator(parent);
-				this.addSubmenu('importFrom', menu, parent);
+				// menu.addSeparator(parent);
+				// this.addSubmenu('importFrom', menu, parent);
 				this.addSubmenu('exportAs', menu, parent);
 				// menu.addSeparator(parent);
 				// this.addSubmenu('embed', menu, parent);

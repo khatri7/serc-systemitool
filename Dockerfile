@@ -11,6 +11,10 @@ RUN apt-get update -y && \
 RUN cd /tmp && \
     git clone --depth 1 https://github.com/khatri7/serc-systemitool.git && \
     cd /tmp/serc-systemitool/etc/build/ && \
+    branch=$(git rev-parse --abbrev-ref HEAD) && \
+    commit=$(git rev-parse HEAD) && \
+    echo "Current branch: $branch" && \
+    echo "Last commit: $commit" && \
     ant war
 
 # Copy the Draw.io folder into the Docker image
