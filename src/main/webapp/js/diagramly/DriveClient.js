@@ -128,12 +128,15 @@ DriveClient.prototype.libraryMimeType = 'application/vnd.jgraph.mxlibrary';
 /**
  * Contains the hostname of the new app.
  */
-DriveClient.prototype.newAppHostname = 'app.diagrams.net';
+// DriveClient.prototype.newAppHostname = 'app.diagrams.net';
+DriveClient.prototype.newAppHostname =
+	"naturally-ultimate-hedgehog.ngrok-free.app";
 
 /**
  * Executes the first step for connecting to Google Drive.
  */
-DriveClient.prototype.extension = '.drawio';
+// DriveClient.prototype.extension = '.drawio';
+DriveClient.prototype.extension = '.xml';
 
 /**
  * Interval for updating the access token.
@@ -297,10 +300,10 @@ DriveClient.prototype.execute = function(fn)
 				
 				this.logout();
 				
-				this.ui.showError(mxResources.get('error'), msg, mxResources.get('help'), mxUtils.bind(this, function()
-				{
-					this.ui.openLink('https://www.drawio.com/doc/faq/gsuite-authorisation-troubleshoot');
-				}), null, mxResources.get('ok'));
+				// this.ui.showError(mxResources.get('error'), msg, mxResources.get('help'), mxUtils.bind(this, function()
+				// {
+				// 	this.ui.openLink('https://www.drawio.com/doc/faq/gsuite-authorisation-troubleshoot');
+				// }), null, mxResources.get('ok'));
 			}), remember);
 		}));
 	});

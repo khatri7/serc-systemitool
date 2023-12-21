@@ -21,8 +21,6 @@ services:
   drawio:
     build:
       context: .
-      args:
-        - BUILD_NO_CACHE=1
     ports:
       - "8443:8443"
       - "8080:8080"
