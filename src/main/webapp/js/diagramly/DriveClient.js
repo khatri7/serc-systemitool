@@ -28,8 +28,10 @@ window.DriveClient = function(editorUi, isExtAuth)
 	this.ui = editorUi;
 	
 	// New mime type for XML files
-	this.xmlMimeType = 'application/vnd.jgraph.mxfile';
-	this.mimeType = 'application/vnd.jgraph.mxfile.realtime';
+	// this.xmlMimeType = 'application/vnd.jgraph.mxfile';
+	this.xmlMimeType = 'application/xml';
+	// this.mimeType = 'application/vnd.jgraph.mxfile.realtime';
+	this.mimeType = 'application/xml';
 	
 	// Reading files now possible with no initial click in drive
 	//TODO In teams we do auth using editor app, we need to support viewer only app also
@@ -50,8 +52,9 @@ window.DriveClient = function(editorUi, isExtAuth)
 		this.clientId = window.DRAWIO_GOOGLE_CLIENT_ID || '671128082532-jhphbq6d0e1gnsus9mn7vf8a6fjn10mp.apps.googleusercontent.com';
 	}
 	
-	this.mimeTypes = this.xmlMimeType + ',application/mxe,application/mxr,' +
-		'application/vnd.jgraph.mxfile.realtime,application/vnd.jgraph.mxfile.rtlegacy';
+	// this.mimeTypes = this.xmlMimeType + ',application/mxe,application/mxr,' +
+	// 	'application/vnd.jgraph.mxfile.realtime,application/vnd.jgraph.mxfile.rtlegacy';
+	this.mimeTypes = this.xmlMimeType + ',application/mxe,application/mxr';
 	
 	var authInfo = JSON.parse(this.token);
 	
@@ -123,7 +126,8 @@ DriveClient.prototype.placeholderMimeType = 'image/png';
 /**
  * Executes the first step for connecting to Google Drive.
  */
-DriveClient.prototype.libraryMimeType = 'application/vnd.jgraph.mxlibrary';
+// DriveClient.prototype.libraryMimeType = 'application/vnd.jgraph.mxlibrary';
+DriveClient.prototype.libraryMimeType = 'application/xml';
 
 /**
  * Contains the hostname of the new app.
