@@ -126,8 +126,7 @@ DriveClient.prototype.placeholderMimeType = 'image/png';
 /**
  * Executes the first step for connecting to Google Drive.
  */
-// DriveClient.prototype.libraryMimeType = 'application/vnd.jgraph.mxlibrary';
-DriveClient.prototype.libraryMimeType = 'application/xml';
+DriveClient.prototype.libraryMimeType = 'application/vnd.jgraph.mxlibrary';
 
 /**
  * Contains the hostname of the new app.
@@ -1109,6 +1108,7 @@ DriveClient.prototype.isGoogleRealtimeMimeType = function(mimeType)
  */
 DriveClient.prototype.getXmlFile = function(resp, success, error, ignoreMime, readLibrary)
 {
+	console.log("Getting XML File")
 	try
 	{
 		var headers = {'Authorization': 'Bearer ' + _token};
@@ -1124,6 +1124,7 @@ DriveClient.prototype.getXmlFile = function(resp, success, error, ignoreMime, re
 		}
 		else
 		{
+			console.log(("URL is not null"))
 			var retryCount = 0;
 
 			var fn = mxUtils.bind(this, function()
@@ -1140,12 +1141,19 @@ DriveClient.prototype.getXmlFile = function(resp, success, error, ignoreMime, re
 						}
 						else if (resp.mimeType == this.libraryMimeType || readLibrary)
 						{
+							console.log("Data is not null")
 							if (resp.mimeType == this.libraryMimeType && !readLibrary)
 							{
+								console.log({
+									respMime: resp.mimeType,
+									libraryMimeType: this.libraryMimeType,
+									readLibrary
+								})
 								error({message: mxResources.get('notADiagramFile')});
 							}
 							else
 							{
+								console.log("Opened file successfully")
 								success(new DriveLibrary(this.ui, data, resp));
 							}
 						}
