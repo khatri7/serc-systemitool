@@ -126,7 +126,7 @@ DriveClient.prototype.placeholderMimeType = 'image/png';
 /**
  * Executes the first step for connecting to Google Drive.
  */
-DriveClient.prototype.libraryMimeType = 'application/vnd.jgraph.mxlibrary';
+DriveClient.prototype.libraryMimeType = 'application/xml';
 
 /**
  * Contains the hostname of the new app.
@@ -1098,7 +1098,8 @@ DriveClient.prototype.getFile = function(id, success, error, readXml, readLibrar
  */
 DriveClient.prototype.isGoogleRealtimeMimeType = function(mimeType)
 {
-	return mimeType != null && mimeType.substring(0, 30) == 'application/vnd.jgraph.mxfile.';
+	// return mimeType != null && mimeType.substring(0, 30) == 'application/vnd.jgraph.mxfile.';
+	return false;
 };
 
 /**
@@ -1108,7 +1109,6 @@ DriveClient.prototype.isGoogleRealtimeMimeType = function(mimeType)
  */
 DriveClient.prototype.getXmlFile = function(resp, success, error, ignoreMime, readLibrary)
 {
-	console.log("Getting XML File")
 	try
 	{
 		var headers = {'Authorization': 'Bearer ' + _token};
@@ -1124,7 +1124,6 @@ DriveClient.prototype.getXmlFile = function(resp, success, error, ignoreMime, re
 		}
 		else
 		{
-			console.log(("URL is not null"))
 			var retryCount = 0;
 
 			var fn = mxUtils.bind(this, function()
@@ -1141,19 +1140,12 @@ DriveClient.prototype.getXmlFile = function(resp, success, error, ignoreMime, re
 						}
 						else if (resp.mimeType == this.libraryMimeType || readLibrary)
 						{
-							console.log("Data is not null")
 							if (resp.mimeType == this.libraryMimeType && !readLibrary)
 							{
-								console.log({
-									respMime: resp.mimeType,
-									libraryMimeType: this.libraryMimeType,
-									readLibrary
-								})
 								error({message: mxResources.get('notADiagramFile')});
 							}
 							else
 							{
-								console.log("Opened file successfully")
 								success(new DriveLibrary(this.ui, data, resp));
 							}
 						}
@@ -2511,16 +2503,16 @@ DriveClient.prototype.pickLibrary = function(fn)
 					var view = new google.picker.DocsView(google.picker.ViewId.FOLDERS)
 				        	.setParent('root')
 				        	.setIncludeFolders(true)
-						.setMimeTypes(this.libraryMimeType + ',application/xml,text/plain,application/octet-stream');
+						.setMimeTypes(this.libraryMimeType + ',text/plain,application/octet-stream');
 					
 					var view2 = new google.picker.DocsView()
 			        		.setIncludeFolders(true)
-						.setMimeTypes(this.libraryMimeType + ',application/xml,text/plain,application/octet-stream');
+						.setMimeTypes(this.libraryMimeType + ',text/plain,application/octet-stream');
 				
 					var view3 = new google.picker.DocsView()
 						.setEnableDrives(true)
 						.setIncludeFolders(true)
-						.setMimeTypes(this.libraryMimeType + ',application/xml,text/plain,application/octet-stream');
+						.setMimeTypes(this.libraryMimeType + ',text/plain,application/octet-stream');
 					
 					var view4 = new google.picker.DocsUploadView()
 						.setIncludeFolders(true);
