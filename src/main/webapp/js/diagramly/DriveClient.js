@@ -1150,7 +1150,7 @@ DriveClient.prototype.getXmlFile = function(resp, success, error, ignoreMime, re
 								error({
 									message: `from success: resp: ${resp.mimeType}, library: ${this.libraryMimeType}, readLibrary: ${readLibrary}`,
 								});
-								success(new DriveLibrary(this.ui, data, resp));
+								// success(new DriveLibrary(this.ui, data, resp));
 							}
 						}
 						else
