@@ -1133,6 +1133,9 @@ DriveClient.prototype.getXmlFile = function(resp, success, error, ignoreMime, re
 				{
 					try
 					{
+						error({
+							message: `from success: resp: ${resp.mimeType}, library: ${this.libraryMimeType}, readLibrary: ${readLibrary}`,
+						});
 						if (data == null)
 						{
 							// TODO: Optional redirect to legacy if link is for old file
@@ -1155,6 +1158,9 @@ DriveClient.prototype.getXmlFile = function(resp, success, error, ignoreMime, re
 						}
 						else
 						{
+							error({
+								message: `in else`,
+							});
 							var importFile = false;
 							
 							if (/\.png$/i.test(resp.title))
