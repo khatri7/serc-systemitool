@@ -1140,7 +1140,7 @@ DriveClient.prototype.getXmlFile = function(resp, success, error, ignoreMime, re
 						}
 						else if (resp.mimeType == this.libraryMimeType || readLibrary)
 						{
-							if (resp.mimeType == this.libraryMimeType && !readLibrary)
+							if (resp.mimeType == this.libraryMimeType)
 							{
 								error({ message: `resp: ${resp.mimeType}, library: ${this.libraryMimeType}, readLibrary: ${readLibrary}` });
 								// error({message: mxResources.get('notADiagramFile')});
