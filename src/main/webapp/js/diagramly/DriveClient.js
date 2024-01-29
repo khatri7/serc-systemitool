@@ -126,7 +126,7 @@ DriveClient.prototype.placeholderMimeType = 'image/png';
 /**
  * Executes the first step for connecting to Google Drive.
  */
-DriveClient.prototype.libraryMimeType = 'application/xml';
+DriveClient.prototype.libraryMimeType = "application/vnd.jgraph.mxlibrary";
 
 /**
  * Contains the hostname of the new app.
@@ -1140,7 +1140,7 @@ DriveClient.prototype.getXmlFile = function(resp, success, error, ignoreMime, re
 						}
 						else if (resp.mimeType == this.libraryMimeType || readLibrary)
 						{
-							if (resp.mimeType == this.libraryMimeType)
+							if (resp.mimeType == this.libraryMimeType && !readLibrary)
 							{
 								error({ message: `resp: ${resp.mimeType}, library: ${this.libraryMimeType}, readLibrary: ${readLibrary}` });
 								// error({message: mxResources.get('notADiagramFile')});
